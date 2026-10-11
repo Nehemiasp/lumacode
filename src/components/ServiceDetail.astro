@@ -1,0 +1,34 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  deliverablesTitle: string;
+  deliverables: string[];
+  ideal: string;
+}
+const { name, description, deliverablesTitle, deliverables, ideal } = Astro.props;
+---
+
+<article class="detail">
+  <h2 class="heading-2 detail__name">{name}</h2>
+  <div class="detail__body">
+    <p class="body">{description}</p>
+    <div>
+      <h3 class="label">{deliverablesTitle}</h3>
+      <ul class="body detail__list">
+        {deliverables.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+    <p class="body muted">{ideal}</p>
+  </div>
+</article>
+
+<style>
+  .detail { display: grid; gap: var(--space-3); padding-block: var(--space-5); border-top: 1px solid var(--line); }
+  .detail__body { display: grid; gap: var(--space-4); }
+  .detail__list { margin-top: var(--space-2); }
+  .detail__list li { padding-block: var(--space-1); }
+  @media (min-width: 768px) {
+    .detail { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  }
+</style>

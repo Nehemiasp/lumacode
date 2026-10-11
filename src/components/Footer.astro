@@ -1,0 +1,68 @@
+---
+import Logo from './Logo.astro';
+import LangSwitch from './LangSwitch.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { route, homeAnchor, useT, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  alternates: Record<Lang, string>;
+}
+const { lang, alternates } = Astro.props;
+const { t } = useT(lang);
+
+const links = [
+  { label: t('nav.services'), href: route('services', lang) },
+  { label: t('nav.work'), href: route('work', lang) },
+  { label: t('nav.process'), href: homeAnchor('proceso', lang) },
+  { label: t('nav.studio'), href: homeAnchor('estudio', lang) },
+  { label: t('nav.cta'), href: route('contact', lang) },
+];
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <a href={route('home', lang)} aria-label={t('ui.home')} class="site-footer__logo"><Logo height={24} /></a>
+      <p class="label muted">{t('footer.tagline')}</p>
+      <p class="caption muted">{t('footer.copy', { año: new Date().getFullYear(), year: new Date().getFullYear() })}</p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label={t('nav.main')}>
+      <ul>
+        {links.map((l) => (
+          <li><a class="label" href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-footer__tools">
+      <LangSwitch lang={lang} alternates={alternates} />
+      <ThemeToggle lang={lang} />
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); background: var(--ground); margin-top: var(--section-gap); }
+  .site-footer__inner {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+  }
+  .site-footer__brand { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
+  .site-footer__logo { display: inline-flex; margin-bottom: var(--space-2); }
+  .site-footer__nav ul { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); }
+  .site-footer__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .site-footer__nav a:hover { color: var(--luma-text); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .site-footer__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  @media (min-width: 900px) {
+    .site-footer__inner { grid-template-columns: 1fr auto auto; align-items: start; gap: var(--space-6); }
+  }
+</style>

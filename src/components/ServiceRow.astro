@@ -1,0 +1,24 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  includes: string;
+}
+const { name, description, includes } = Astro.props;
+---
+
+<article class="row">
+  <h3 class="heading-2 row__name">{name}</h3>
+  <div class="row__body">
+    <p class="body">{description}</p>
+    <p class="label muted">{includes}</p>
+  </div>
+</article>
+
+<style>
+  .row { display: grid; gap: var(--space-3); padding-block: var(--space-4); border-top: 1px solid var(--line); }
+  .row__body { display: grid; gap: var(--space-2); }
+  @media (min-width: 768px) {
+    .row { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  }
+</style>

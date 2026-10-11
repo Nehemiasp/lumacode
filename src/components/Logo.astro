@@ -1,0 +1,15 @@
+---
+// El logo se usa siempre como archivo SVG, nunca reescrito con la fuente.
+// Dos imágenes con clases por tema (ver global.css); sin filtros CSS.
+interface Props {
+  /** Alto en píxeles. */
+  height?: number;
+  priority?: boolean;
+}
+const { height = 30, priority = false } = Astro.props;
+const width = Math.round((height * 5383) / 843);
+const style = `height:${height}px;width:auto`;
+---
+
+<img class="logo-dark" src="/brand/svg/lumacode-lockup-paper.svg" alt="Lumacode" width={width} height={height} style={style} decoding="async" fetchpriority={priority ? 'high' : undefined} />
+<img class="logo-light" src="/brand/svg/lumacode-lockup-ink.svg" alt="Lumacode" width={width} height={height} style={style} decoding="async" loading="lazy" />

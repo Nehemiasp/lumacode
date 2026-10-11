@@ -1,0 +1,33 @@
+---
+interface Props {
+  name: string;
+  forWho: string;
+  includes: string;
+  price: string;
+  featured?: boolean;
+}
+const { name, forWho, includes, price, featured = false } = Astro.props;
+---
+
+<article class:list={['pkg', { 'pkg--featured': featured }]}>
+  <h3 class="heading-2">{name}</h3>
+  <p class:list={['label', featured ? 'accent' : 'muted']}>{forWho}</p>
+  <p class="body pkg__includes">{includes}</p>
+  <p class="heading-2 pkg__price">{price}</p>
+</article>
+
+<style>
+  .pkg {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+  }
+  /* El borde de 2px reemplaza al de 1px sin mover el contenido */
+  .pkg--featured { border: 2px solid var(--luma-text); padding: calc(var(--space-4) - 1px); }
+  .pkg--featured .label { font-weight: 600; }
+  .pkg__includes { flex: 1; margin-bottom: var(--space-4); }
+</style>

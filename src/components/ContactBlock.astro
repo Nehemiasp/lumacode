@@ -1,0 +1,66 @@
+---
+import { config } from '../config';
+import { channels } from '../lib/channels';
+import { route, useT, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const { t } = useT(lang);
+const social = channels();
+---
+
+<section class="section" id="contacto" aria-labelledby="contacto-titulo">
+  <div class="container">
+    <div class="block on-screen">
+      <div class="block__content">
+        <h2 class="display-l" id="contacto-titulo">
+          {t('contact.title.1')}<br />
+          <span class="accent">{t('contact.title.2')}</span>
+        </h2>
+        <a class="block__mail heading-1 link" href={`mailto:${config.email}`}>{config.email}</a>
+        <div class="block__actions">
+          <a class="btn" href={route('contact', lang)}>{t('contact.cta')}</a>
+          {social.length > 0 && (
+            <ul class="block__social">
+              {social.map((c) => (
+                <li>
+                  <a class="label link" href={c.href} target="_blank" rel="noopener">{c.label}<span class="sr-only"> {t('ui.external')}</span></a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+      <span class="block__light" aria-hidden="true"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .block {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--screen);
+    padding: var(--space-5) var(--space-4) calc(var(--space-5) + 180px);
+  }
+  .block__content { position: relative; z-index: 1; display: grid; gap: var(--space-4); justify-items: start; }
+  .block__mail { font-size: clamp(22px, 6vw, 44px); overflow-wrap: anywhere; }
+  .block__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-5); }
+  .block__social { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); }
+  /* La luz grande, cortada por el borde derecho */
+  .block__light {
+    position: absolute;
+    right: -70px;
+    bottom: -40px;
+    width: 220px;
+    aspect-ratio: 1;
+    border-radius: var(--radius-full);
+    background: var(--luma);
+  }
+  @media (min-width: 768px) {
+    .block { padding: var(--space-6) var(--space-6); }
+    .block__content { max-width: 62%; }
+    .block__light { top: 50%; bottom: auto; right: -14%; width: 52%; max-width: 620px; transform: translateY(-50%); }
+  }
+</style>

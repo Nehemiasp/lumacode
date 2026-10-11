@@ -1,0 +1,283 @@
+---
+import { config } from '../config';
+import { route, absoluteUrl, useT, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const { t, parts } = useT(lang);
+
+const thanksPath = route('thanks', lang);
+const thanksUrl = absoluteUrl(thanksPath, Astro.site!);
+const needs = parts('form.need.options');
+const time = config.tiempoRespuesta[lang].trim();
+const note = [time ? t('form.response', { tiempo: time, time }) : '', t('form.privacy')].filter(Boolean).join(' ');
+const sendError = t('form.error.send');
+const [beforeMail, afterMail] = sendError.split(config.email);
+
+const messages = {
+  required: t('form.error.required'),
+  email: t('form.error.email'),
+  need: t('form.error.need'),
+  sending: t('form.sending'),
+  submit: t('form.submit'),
+};
+---
+
+<form
+  class="form"
+  method="post"
+  action={config.formEndpoint || undefined}
+  data-endpoint={config.formEndpoint}
+  data-thanks={thanksPath}
+  data-messages={JSON.stringify(messages)}
+>
+  <p class="caption muted">{t('ui.required')}</p>
+
+  <div class="field">
+    <label class="label" for="f-nombre">{t('form.name')} <span aria-hidden="true">*</span></label>
+    <input id="f-nombre" name="name" type="text" autocomplete="name" required aria-describedby="f-nombre-error" />
+    <p class="field__error" id="f-nombre-error" hidden></p>
+  </div>
+
+  <div class="field">
+    <label class="label" for="f-correo">{t('form.email')} <span aria-hidden="true">*</span></label>
+    <input id="f-correo" name="email" type="email" autocomplete="email" inputmode="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" aria-describedby="f-correo-error" />
+    <p class="field__error" id="f-correo-error" hidden></p>
+  </div>
+
+  <div class="field">
+    <label class="label" for="f-empresa">{t('form.company')}</label>
+    <input id="f-empresa" name="company" type="text" autocomplete="organization" />
+  </div>
+
+  <fieldset class="field" id="f-necesidad" aria-describedby="f-necesidad-error">
+    <legend class="label">{t('form.need')} <span aria-hidden="true">*</span></legend>
+    <div class="chips">
+      {needs.map((option) => (
+        <label class="chip">
+          <input type="checkbox" name="need" value={option} />
+          <span class="chip__text label">{option}</span>
+        </label>
+      ))}
+    </div>
+    <p class="field__error" id="f-necesidad-error" hidden></p>
+  </fieldset>
+
+  <div class="field">
+    <label class="label" for="f-mensaje">{t('form.message')} <span aria-hidden="true">*</span></label>
+    <textarea id="f-mensaje" name="message" rows="6" required aria-describedby="f-mensaje-error"></textarea>
+    <p class="field__error" id="f-mensaje-error" hidden></p>
+  </div>
+
+  <!-- Campo trampa contra spam: las personas no lo ven -->
+  <div class="trap" aria-hidden="true">
+    <label>No rellenar <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+  </div>
+  <input type="hidden" name="_subject" value="Lumacode Studio" />
+  <input type="hidden" name="_next" value={thanksUrl} />
+  <input type="hidden" name="redirect" value={thanksUrl} />
+  {config.formAccessKey && <input type="hidden" name="access_key" value={config.formAccessKey} />}
+
+  <button class="btn form__submit" type="submit">{t('form.submit')}</button>
+  <p class="caption muted form__note">{note}</p>
+
+  <div class="form__alert" role="alert" id="form-alert"></div>
+  <template id="form-alert-template">
+    <p class="field__error form__alert-text">
+      <svg class="field__icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4.2M8 10.8v.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>{beforeMail}{afterMail !== undefined && <a class="link" href={`mailto:${config.email}`}>{config.email}</a>}{afterMail}</span>
+    </p>
+  </template>
+</form>
+
+<style>
+  .form { display: grid; gap: var(--space-4); position: relative; }
+  .field { display: grid; gap: var(--space-2); border: 0; padding: 0; margin: 0; min-width: 0; }
+  .field > .label { padding: 0; }
+  input[type='text'], input[type='email'], textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: var(--space-3);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 24px;
+    transition: border-color 150ms;
+  }
+  textarea { resize: vertical; min-height: 160px; }
+  input[type='text']:hover, input[type='email']:hover, textarea:hover { border-color: var(--muted); }
+  /* Foco: borde de 2px en --luma-text (se compensa el padding para que nada salte) */
+  input[type='text']:focus, input[type='email']:focus, textarea:focus {
+    outline: none;
+    border: 2px solid var(--luma-text);
+    padding: calc(var(--space-3) - 1px);
+  }
+  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--text); border-width: 2px; padding: calc(var(--space-3) - 1px); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip { position: relative; display: inline-flex; }
+  .chip input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .chip__text {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    transition: background-color 150ms, color 150ms, border-color 150ms;
+  }
+  .chip:hover .chip__text { border-color: var(--muted); }
+  .chip input:checked + .chip__text { background: var(--text); color: var(--ground); border-color: var(--text); }
+  .chip input:checked + .chip__text::before { content: '\2713'; margin-right: var(--space-2); }
+  .chip input:focus-visible + .chip__text { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .field__error { display: flex; align-items: flex-start; gap: var(--space-2); color: var(--text); font-size: 14px; line-height: 20px; font-weight: 500; }
+  .field__error[hidden] { display: none; }
+  :global(.field__icon) { flex: none; margin-top: 2px; }
+
+  .trap { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+  .form__submit { width: 100%; }
+  .form__note { margin-top: calc(var(--space-2) * -1); }
+  .form__alert:empty { display: none; }
+  .form__alert { padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
+  @media (min-width: 768px) {
+    .form__submit { width: auto; justify-self: start; }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('.form');
+  if (form) {
+    const messages = JSON.parse(form.dataset.messages ?? '{}') as Record<string, string>;
+    const submit = form.querySelector<HTMLButtonElement>('.form__submit')!;
+    const alertBox = form.querySelector<HTMLElement>('#form-alert')!;
+    const alertTemplate = form.querySelector<HTMLTemplateElement>('#form-alert-template')!;
+    const icon =
+      '<svg class="field__icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4.2M8 10.8v.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+
+    // Con JavaScript usamos mensajes propios; sin él, queda la validación nativa del navegador
+    form.noValidate = true;
+
+    const errorBox = (control: HTMLElement) => form.querySelector<HTMLElement>(`#${control.id}-error`);
+
+    function setError(control: HTMLElement, message: string) {
+      const box = errorBox(control);
+      if (!box) return;
+      box.innerHTML = icon;
+      const text = document.createElement('span');
+      text.textContent = message;
+      box.append(text);
+      box.hidden = false;
+      control.setAttribute('aria-invalid', 'true');
+    }
+    function clearError(control: HTMLElement) {
+      const box = errorBox(control);
+      if (box) {
+        box.hidden = true;
+        box.textContent = '';
+      }
+      control.removeAttribute('aria-invalid');
+    }
+
+    function validateField(input: HTMLInputElement | HTMLTextAreaElement): boolean {
+      clearError(input);
+      if (input.validity.valueMissing || (input.required && !input.value.trim())) {
+        setError(input, messages.required);
+        return false;
+      }
+      if (input.type === 'email' && (input.validity.typeMismatch || input.validity.patternMismatch)) {
+        setError(input, messages.email);
+        return false;
+      }
+      return true;
+    }
+
+    const need = form.querySelector<HTMLFieldSetElement>('#f-necesidad')!;
+    const needBoxes = () => [...need.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')];
+    function validateNeed(): boolean {
+      clearError(need);
+      if (!needBoxes().some((b) => b.checked)) {
+        setError(need, messages.need);
+        return false;
+      }
+      return true;
+    }
+
+    // Limpia el error en cuanto la persona corrige el campo
+    form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]').forEach((el) =>
+      el.addEventListener('input', () => {
+        if (el.getAttribute('aria-invalid')) validateField(el);
+      }),
+    );
+    need.addEventListener('change', () => {
+      if (need.getAttribute('aria-invalid')) validateNeed();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      alertBox.textContent = '';
+
+      // Se validan todos los campos; el foco va al primero inválido
+      const order: { ok: boolean; focus: HTMLElement }[] = [];
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]').forEach((el) =>
+        order.push({ ok: validateField(el), focus: el }),
+      );
+      order.push({ ok: validateNeed(), focus: needBoxes()[0] });
+      // Orden visual: nombre, correo, necesidad, mensaje
+      const domOrder = [...form.querySelectorAll<HTMLElement>('input, textarea')];
+      const invalid = order.filter((o) => !o.ok).sort((a, b) => domOrder.indexOf(a.focus) - domOrder.indexOf(b.focus));
+      if (invalid.length) {
+        invalid[0].focus.focus();
+        return;
+      }
+
+      const data = new FormData(form);
+      // Campo trampa: si está lleno es un bot; se finge éxito sin enviar nada
+      if (String(data.get('_gotcha') ?? '').trim()) {
+        location.assign(form.dataset.thanks!);
+        return;
+      }
+
+      const payload: Record<string, string> = {};
+      data.forEach((value, key) => {
+        if (key === 'need' || key === '_gotcha' || typeof value !== 'string') return;
+        payload[key] = value;
+      });
+      payload.need = data.getAll('need').join(', ');
+
+      const label = submit.textContent;
+      submit.disabled = true;
+      submit.textContent = messages.sending;
+      form.setAttribute('aria-busy', 'true');
+      try {
+        const endpoint = form.dataset.endpoint;
+        if (!endpoint) throw new Error('Sin endpoint');
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok) throw new Error(`Error ${response.status}`);
+        location.assign(form.dataset.thanks!);
+      } catch {
+        alertBox.append(alertTemplate.content.cloneNode(true));
+        submit.disabled = false;
+        submit.textContent = label;
+        form.removeAttribute('aria-busy');
+      }
+    });
+  }
+</script>

@@ -1,0 +1,49 @@
+---
+import { useT, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const { t } = useT(lang);
+---
+
+<button type="button" class="theme-toggle label" aria-pressed="false" data-to-light={t('theme.light')} data-to-dark={t('theme.dark')}>
+  {t('theme.light')}
+</button>
+
+<style>
+  .theme-toggle {
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    transition: color 150ms, border-color 150ms;
+  }
+  .theme-toggle:hover { color: var(--luma-text); border-color: var(--luma-text); }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const isLight = () =>
+    root.dataset.theme ? root.dataset.theme === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
+
+  function sync() {
+    if (!button) return;
+    const light = isLight();
+    button.setAttribute('aria-pressed', String(light));
+    button.textContent = light ? button.dataset.toDark! : button.dataset.toLight!;
+  }
+
+  button?.addEventListener('click', () => {
+    const next = isLight() ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('lumacode-theme', next);
+    } catch {
+      /* el almacenamiento puede no estar disponible */
+    }
+    sync();
+  });
+  sync();
+</script>

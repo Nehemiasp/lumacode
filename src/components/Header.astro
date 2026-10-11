@@ -1,0 +1,194 @@
+---
+import Logo from './Logo.astro';
+import LangSwitch from './LangSwitch.astro';
+import { route, homeAnchor, useT, type Lang, type RouteName } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  alternates: Record<Lang, string>;
+  /** Sección actual: sirve para marcar el link activo. */
+  current?: RouteName | 'case' | null;
+}
+const { lang, alternates, current = null } = Astro.props;
+const { t } = useT(lang);
+
+const links = [
+  { key: 'services', label: t('nav.services'), href: route('services', lang), active: current === 'services' ? 'page' : null },
+  { key: 'work', label: t('nav.work'), href: route('work', lang), active: current === 'work' ? 'page' : current === 'case' ? 'true' : null },
+  { key: 'process', label: t('nav.process'), href: homeAnchor('proceso', lang), active: null },
+  { key: 'studio', label: t('nav.studio'), href: homeAnchor('estudio', lang), active: null },
+] as const;
+const contact = route('contact', lang);
+---
+
+<header class="site-header">
+  <div class="container site-header__bar">
+    <a class="site-header__logo" href={route('home', lang)} aria-label={t('ui.home')}>
+      <Logo height={30} priority />
+    </a>
+
+    <nav class="site-header__nav" aria-label={t('nav.main')}>
+      <ul class="site-header__links">
+        {links.map((l) => (
+          <li>
+            <a class="label navlink" href={l.href} aria-current={l.active}>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <LangSwitch lang={lang} alternates={alternates} />
+      <a class="btn site-header__cta" href={contact}>{t('nav.cta')}</a>
+      <button type="button" class="menu-button" aria-label={t('nav.menu')} aria-haspopup="dialog" aria-controls="menu">
+        <span class="menu-button__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <dialog id="menu" class="menu" aria-label={t('nav.main')}>
+    <div class="container menu__bar">
+      <a class="site-header__logo" href={route('home', lang)} aria-label={t('ui.home')}>
+        <Logo height={30} />
+      </a>
+      <button type="button" class="menu-button menu-button--close" aria-label={t('nav.close')}>
+        <span class="menu-button__x" aria-hidden="true"></span>
+      </button>
+    </div>
+    <nav class="container menu__nav" aria-label={t('nav.main')}>
+      <ul>
+        {links.map((l) => (
+          <li>
+            <a class="heading-1 menu__link" href={l.href} aria-current={l.active}>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+      <a class="btn menu__cta" href={contact}>{t('nav.cta')}</a>
+    </nav>
+  </dialog>
+</header>
+
+<style>
+  .site-header { background: var(--ground); border-bottom: 1px solid var(--line); }
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 72px;
+  }
+  .site-header__logo { display: inline-flex; align-items: center; flex: none; }
+  .site-header__nav { display: none; margin-left: auto; }
+  .site-header__links { display: flex; align-items: center; gap: var(--space-4); }
+  .navlink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 150ms;
+  }
+  .navlink:hover, .navlink[aria-current] { color: var(--luma-text); }
+  .site-header__actions { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+  .site-header__cta { display: none; }
+
+  .menu-button {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+  }
+  .menu-button__bars, .menu-button__bars::before {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    content: '';
+  }
+  .menu-button__bars { position: relative; top: -3px; }
+  .menu-button__bars::before { position: relative; top: 7px; }
+  .menu-button__x { position: relative; width: 18px; height: 18px; }
+  .menu-button__x::before, .menu-button__x::after {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    content: '';
+  }
+  .menu-button__x::before { transform: rotate(45deg); }
+  .menu-button__x::after { transform: rotate(-45deg); }
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--ground);
+    color: var(--text);
+    overflow-y: auto;
+  }
+  .menu[open] { display: flex; flex-direction: column; }
+  .menu__bar { display: flex; align-items: center; justify-content: space-between; min-height: 72px; border-bottom: 1px solid var(--line); }
+  .menu__nav { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-5); padding-block: var(--space-5); }
+  .menu__nav ul { display: flex; flex-direction: column; width: 100%; }
+  .menu__link {
+    display: block;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+  }
+  .menu__link[aria-current] { color: var(--luma-text); }
+  .menu__cta { width: 100%; }
+
+  /* Sin JavaScript no hay menú desplegable: la navegación queda visible en línea */
+  :global(html:not(.js)) .menu-button { display: none; }
+  :global(html:not(.js)) .site-header__nav { display: block; margin-left: 0; }
+  :global(html:not(.js)) .site-header__bar { flex-wrap: wrap; padding-block: var(--space-2); }
+  :global(html:not(.js)) .site-header__links { flex-wrap: wrap; gap: var(--space-3); }
+  :global(html:not(.js)) .site-header__cta { display: inline-flex; }
+
+  @media (min-width: 1000px) {
+    .site-header__nav { display: block; }
+    .site-header__actions { margin-left: 0; }
+    .site-header__cta { display: inline-flex; }
+    .menu-button { display: none; }
+    .menu { display: none !important; }
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#menu');
+  const open = document.querySelector<HTMLButtonElement>('.menu-button[aria-controls="menu"]');
+  const close = dialog?.querySelector<HTMLButtonElement>('.menu-button--close');
+  const lock = (on: boolean) => {
+    document.documentElement.style.overflow = on ? 'hidden' : '';
+  };
+
+  // <dialog> modal: atrapa el foco, inerte el resto de la página y cierra con Esc
+  open?.addEventListener('click', () => {
+    dialog?.showModal();
+    lock(true);
+  });
+  close?.addEventListener('click', () => dialog?.close());
+  dialog?.addEventListener('close', () => {
+    lock(false);
+    open?.focus();
+  });
+  // Un link del menú cierra el panel (los anclas del inicio no recargan la página)
+  dialog?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => dialog.close()));
+  matchMedia('(min-width: 1000px)').addEventListener('change', (e) => {
+    if (e.matches && dialog?.open) dialog.close();
+  });
+</script>

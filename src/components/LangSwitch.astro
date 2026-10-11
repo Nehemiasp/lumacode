@@ -1,0 +1,38 @@
+---
+import { useT, type Lang } from '../i18n';
+interface Props {
+  lang: Lang;
+  alternates: Record<Lang, string>;
+}
+const { lang, alternates } = Astro.props;
+const { t } = useT(lang);
+const items: { code: Lang; label: string }[] = [
+  { code: 'es', label: 'ES' },
+  { code: 'en', label: 'EN' },
+];
+---
+
+<nav class="lang" aria-label={t('nav.language')}>
+  {items.map(({ code, label }, i) => (
+    <>
+      {i > 0 && <span class="lang__sep" aria-hidden="true">/</span>}
+      <a href={alternates[code]} lang={code} hreflang={code} aria-current={code === lang ? 'true' : undefined} class:list={['lang__link', 'label', { 'is-current': code === lang }]}>{label}</a>
+    </>
+  ))}
+</nav>
+
+<style>
+  .lang { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .lang__sep { color: var(--muted); }
+  .lang__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 150ms;
+  }
+  .lang__link:hover { color: var(--luma-text); }
+  .lang__link.is-current { color: var(--text); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+</style>

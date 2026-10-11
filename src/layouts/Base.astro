@@ -1,5 +1,16 @@
 ---
-import { languages, route, useT, absoluteUrl, type Lang } from '../i18n';
+import '@fontsource/archivo/latin-400.css';
+import '@fontsource/archivo/latin-500.css';
+import '@fontsource/archivo/latin-600.css';
+import '@fontsource/archivo/latin-700.css';
+import font600 from '@fontsource/archivo/files/archivo-latin-600-normal.woff2?url';
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { languages, route, useT, absoluteUrl, type Lang, type RouteName } from '../i18n';
+import { config } from '../config';
+import { channels } from '../lib/channels';
 
 interface Props {
   lang: Lang;
@@ -7,14 +18,31 @@ interface Props {
   description: string;
   /** Ruta de esta misma página en cada idioma. */
   alternates: Record<Lang, string>;
+  current?: RouteName | 'case' | null;
+  /** Ruta o URL de la imagen para redes (og:image). */
   ogImage?: string;
   noindex?: boolean;
+  /** Datos estructurados Organization (solo en el inicio). */
+  organization?: boolean;
 }
 
-const { lang, title, description, alternates, ogImage, noindex = false } = Astro.props;
+const { lang, title, description, alternates, current = null, ogImage, noindex = false, organization = false } = Astro.props;
 const { t } = useT(lang);
 const site = Astro.site!;
 const canonical = absoluteUrl(alternates[lang], site);
+const image = absoluteUrl(ogImage ?? `/og/og-${lang}.png`, site);
+
+const jsonLd = organization
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: config.name,
+      url: config.siteUrl,
+      logo: absoluteUrl('/brand/png/lumacode-avatar-1080.png', site),
+      email: config.email,
+      ...(channels().length ? { sameAs: channels().filter((c) => c.id !== 'whatsapp').map((c) => c.href) } : {}),
+    }
+  : null;
 ---
 
 <!doctype html>
@@ -24,19 +52,68 @@ const canonical = absoluteUrl(alternates[lang], site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#0D0F0E" />
     <link rel="canonical" href={canonical} />
     {languages.map((l) => <link rel="alternate" hreflang={l} href={absoluteUrl(alternates[l], site)} />)}
     <link rel="alternate" hreflang="x-default" href={absoluteUrl(alternates.es, site)} />
     {noindex && <meta name="robots" content="noindex" />}
+
+    <link rel="icon" href="/brand/svg/lumacode-favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/brand/png/lumacode-favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/brand/png/lumacode-favicon-180.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={config.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_ES'} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <link rel="preload" href={font600} as="font" type="font/woff2" crossorigin />
+
+    <!-- Tema: se aplica antes del primer pintado para evitar el parpadeo -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var saved = localStorage.getItem('lumacode-theme');
+          if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+        } catch (e) {}
+      })();
+    </script>
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
-    <nav>
-      <a href={route('home', lang)}>Lumacode</a>
-      <a href={route('services', lang)}>{t('nav.services')}</a>
-      <a href={route('work', lang)}>{t('nav.work')}</a>
-      <a href={route('contact', lang)}>{t('nav.cta')}</a>
-      <a href={alternates[lang === 'es' ? 'en' : 'es']}>{lang === 'es' ? 'EN' : 'ES'}</a>
-    </nav>
-    <main><slot /></main>
+    <a class="skip-link label" href="#contenido">{t('ui.skip')}</a>
+    <Header lang={lang} alternates={alternates} current={current} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} alternates={alternates} />
   </body>
 </html>
+
+<style is:global>
+  .skip-link {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    z-index: 100;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--text);
+    color: var(--ground);
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus { transform: none; }
+  main:focus { outline: none; }
+</style>

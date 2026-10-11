@@ -23,6 +23,8 @@ export const config = {
 
   // Endpoint del servicio de formularios (variable de entorno)
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT ?? '',
+  // Solo si el servicio lo pide (por ejemplo Web3Forms)
+  formAccessKey: import.meta.env.PUBLIC_FORM_ACCESS_KEY ?? '',
 } as const;
 
 export type PackageId = keyof typeof config.precios;

@@ -1,0 +1,56 @@
+---
+// La Pantalla: el símbolo a gran escala. Decorativa (aria-hidden).
+interface Props {
+  /** Solo el cursor, sin la luz (404). */
+  cursorOnly?: boolean;
+  /** Anima la entrada: primero el cursor, después la luz. */
+  animate?: boolean;
+  class?: string;
+}
+const { cursorOnly = false, animate = false, class: className = '' } = Astro.props;
+---
+
+<div class:list={['screen', { 'screen--animate': animate }, className]} aria-hidden="true">
+  {!cursorOnly && <span class="screen__light"></span>}
+  <span class="screen__cursor"></span>
+</div>
+
+<style>
+  .screen {
+    position: relative;
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: 440px;
+    background: var(--hero-screen);
+    border-radius: var(--radius-lg);
+  }
+  .screen__light {
+    position: absolute;
+    left: 22%;
+    top: 31%;
+    width: 38%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-full);
+    background: var(--luma);
+  }
+  .screen__cursor {
+    position: absolute;
+    left: 68%;
+    top: 29%;
+    width: 8.5%;
+    height: 42%;
+    border-radius: var(--radius-sm);
+    background: var(--luma);
+  }
+
+  /* Entrada única: el cursor aparece primero y la luz se enciende después. Sin parpadeo ni bucle. */
+  .screen--animate .screen__cursor { animation: screen-in 400ms ease-out backwards; }
+  .screen--animate .screen__light { animation: screen-in 400ms ease-out 400ms backwards; }
+  @keyframes screen-in {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .screen--animate .screen__cursor, .screen--animate .screen__light { animation: none; }
+  }
+</style>
