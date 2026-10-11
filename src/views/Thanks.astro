@@ -1,10 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
 import { route, useT, type Lang } from '../i18n';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const { t } = useT(lang);
+const title = t('thanks.title');
 ---
-<Base lang={lang} title={t('thanks.title')} description={t('thanks.text')} alternates={{ es: route('thanks', 'es'), en: route('thanks', 'en') }} noindex>
-  <h1>{t('thanks.title')}</h1>
+
+<Base
+  lang={lang}
+  title={`${title.replace(/\.$/, '')} · Lumacode Studio`}
+  description={t('thanks.text')}
+  alternates={{ es: route('thanks', 'es'), en: route('thanks', 'en') }}
+  current="contact"
+  noindex
+>
+  <div class="container thanks">
+    <h1 class="display-l">{title}</h1>
+    <p class="body-l muted">{t('thanks.text')}</p>
+    <a class="link" href={route('home', lang)}>{t('thanks.back')}</a>
+  </div>
 </Base>
+
+<style>
+  .thanks { display: grid; gap: var(--space-4); justify-items: start; padding-block: var(--section-gap); }
+</style>

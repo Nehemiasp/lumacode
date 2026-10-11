@@ -1,10 +1,53 @@
 ---
 import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { config } from '../config';
+import { channels } from '../lib/channels';
 import { route, useT, type Lang } from '../i18n';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const { t } = useT(lang);
+const social = channels();
 ---
-<Base lang={lang} title={t('meta.contact.title')} description={t('meta.contact.description')} alternates={{ es: route('contact', 'es'), en: route('contact', 'en') }}>
-  <h1>{t('meta.contact.title')}</h1>
+
+<Base
+  lang={lang}
+  title={t('meta.contact.title')}
+  description={t('meta.contact.description')}
+  alternates={{ es: route('contact', 'es'), en: route('contact', 'en') }}
+  current="contact"
+>
+  <div class="container grid contact">
+    <div class="contact__info">
+      <h1 class="display-l">{t('form.title')}</h1>
+      <p class="body-l muted">{t('form.lead')}</p>
+      <div class="channels">
+        <p class="label muted">{t('form.channels')}</p>
+        <ul class="channels__list">
+          <li><a class="heading-3 link" href={`mailto:${config.email}`}>{config.email}</a></li>
+          {social.map((c) => (
+            <li>
+              <a class="heading-3 link" href={c.href} target="_blank" rel="noopener">{c.label}<span class="sr-only"> {t('ui.external')}</span></a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div class="contact__form">
+      <ContactForm lang={lang} />
+    </div>
+  </div>
 </Base>
+
+<style>
+  .contact { padding-block: var(--section-gap) calc(var(--section-gap) / 2); }
+  .contact__info { grid-column: 1 / -1; display: grid; gap: var(--space-4); align-content: start; }
+  .contact__form { grid-column: 1 / -1; }
+  .channels { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
+  .channels__list { display: grid; gap: var(--space-2); justify-items: start; }
+  @media (min-width: 768px) {
+    .contact__info { grid-column: 1 / span 5; }
+    .contact__form { grid-column: 7 / -1; }
+  }
+</style>

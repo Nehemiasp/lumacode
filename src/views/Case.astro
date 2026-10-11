@@ -1,11 +1,180 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { caseUrl, type Lang } from '../i18n';
-import type { CollectionEntry } from 'astro:content';
-interface Props { lang: Lang; project: CollectionEntry<'proyectos'> }
+import { getPublishedProjects, type Project } from '../lib/projects';
+import { serviceName } from '../lib/services';
+import { caseUrl, route, useT, type Lang } from '../i18n';
+
+interface Props { lang: Lang; project: Project }
 const { lang, project } = Astro.props;
+const { t } = useT(lang);
 const d = project.data;
+
+const published = await getPublishedProjects();
+const index = published.findIndex((p) => p.data.slug === d.slug);
+const next = published.length > 1 ? published[(index + 1) % published.length] : null;
+
+const sizes = '(min-width: 1360px) 1280px, 92vw';
+const ogImage = await getImage({ src: d.portada, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 ---
-<Base lang={lang} title={d.titulo[lang]} description={d.resumen[lang]} alternates={{ es: caseUrl(d.slug, 'es'), en: caseUrl(d.slug, 'en') }}>
-  <h1>{d.titulo[lang]}</h1>
+
+<Base
+  lang={lang}
+  title={`${d.titulo[lang]} · Lumacode Studio`}
+  description={d.resumen[lang]}
+  alternates={{ es: caseUrl(d.slug, 'es'), en: caseUrl(d.slug, 'en') }}
+  current="case"
+  ogImage={ogImage.src}
+>
+  <article>
+    <header class="container case-head">
+      <a class="link label" href={route('work', lang)}>{t('case.back')}</a>
+      <p class="label muted">{t(serviceName(d.servicio))} · {d.anio}</p>
+      <h1 class="display-l">{d.titulo[lang]}</h1>
+      <p class="body-l muted">{d.resumen[lang]}</p>
+    </header>
+
+    <div class="container">
+      <Image class="case-cover" src={d.portada} alt={d.titulo[lang]} widths={[720, 1080, 1440, 1920]} {sizes} format="webp" loading="eager" fetchpriority="high" />
+    </div>
+
+    <div class="container">
+      <dl class="facts">
+        <div><dt class="label muted">{t('case.client')}</dt><dd class="body">{d.cliente[lang]}</dd></div>
+        <div><dt class="label muted">{t('case.service')}</dt><dd class="body">{t(serviceName(d.servicio))}</dd></div>
+        <div><dt class="label muted">{t('case.duration')}</dt><dd class="body">{d.duracion[lang]}</dd></div>
+        <div>
+          <dt class="label muted">{t('case.deliverables')}</dt>
+          <dd class="body">{d.entregables[lang].map((item) => <span class="facts__item">{item}</span>)}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <section class="section" aria-labelledby="reto-titulo">
+      <div class="container">
+        <div class="narrow">
+          <h2 class="heading-1" id="reto-titulo">{t('case.challenge')}</h2>
+          <p class="body-l">{d.reto[lang]}</p>
+          {d.retoImagen && (
+            <figure class="figure-block">
+              <Image src={d.retoImagen.src} alt={d.retoImagen.alt[lang]} widths={[640, 960, 1280]} sizes="(min-width: 800px) 760px, 92vw" format="webp" loading="lazy" />
+              {d.retoImagen.pie && <figcaption class="caption muted">{d.retoImagen.pie[lang]}</figcaption>}
+            </figure>
+          )}
+        </div>
+      </div>
+    </section>
+
+    {d.decisiones.length > 0 && (
+      <section class="section section--line" aria-labelledby="decisiones-titulo">
+        <div class="container">
+          <h2 class="heading-1" id="decisiones-titulo">{t('case.decisions')}</h2>
+          <ol class="decisions">
+            {d.decisiones.map((decision) => (
+              <li class="decision">
+                <div class="decision__text">
+                  <h3 class="heading-2">{decision.titulo[lang]}</h3>
+                  <p class="body muted">{decision.porque[lang]}</p>
+                </div>
+                {decision.imagen && (
+                  <figure class="decision__media">
+                    <Image src={decision.imagen.src} alt={decision.imagen.alt[lang]} widths={[640, 960, 1280]} sizes="(min-width: 768px) 50vw, 92vw" format="webp" loading="lazy" />
+                    {decision.imagen.pie && <figcaption class="caption muted">{decision.imagen.pie[lang]}</figcaption>}
+                  </figure>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )}
+
+    {d.imagenes.length > 0 && (
+      <section class="section" aria-label={d.titulo[lang]}>
+        <div class="container gallery">
+          {d.imagenes.map((img) => (
+            <figure>
+              <Image src={img.src} alt={img.alt[lang]} widths={[720, 1080, 1440]} sizes="(min-width: 768px) 92vw, 92vw" format="webp" loading="lazy" />
+              {img.pie && <figcaption class="caption muted">{img.pie[lang]}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {d.resultados && d.resultados.length > 0 && (
+      <section class="section section--line" aria-labelledby="resultado-titulo">
+        <div class="container">
+          <h2 class="heading-1" id="resultado-titulo">{t('case.result')}</h2>
+          <ul class="results">
+            {d.resultados.map((r) => (
+              <li>
+                <p class="display-l figure accent">{r.dato}</p>
+                <p class="body muted">{r.descripcion[lang]}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    <section class="section section--line" aria-label={t('case.next')}>
+      <div class="container end">
+        {next && (
+          <div class="end__next">
+            <p class="label muted">{t('case.next')}</p>
+            <a class="heading-1 link" href={caseUrl(next.data.slug, lang)}>{next.data.titulo[lang]}</a>
+          </div>
+        )}
+        <div class="end__cta">
+          <a class="btn" href={route('contact', lang)}>{t('case.cta')}</a>
+        </div>
+      </div>
+    </section>
+  </article>
 </Base>
+
+<style>
+  .case-head { display: grid; gap: var(--space-3); justify-items: start; padding-block: var(--section-gap) var(--space-5); }
+  .case-head .body-l { max-width: 52ch; }
+  .case-cover { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-md); background: var(--panel); }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-5) 0 0;
+    padding-block: var(--space-4);
+    border-block: 1px solid var(--line);
+  }
+  .facts dd { margin: 0; }
+  .facts__item { display: block; }
+  @media (min-width: 768px) {
+    .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  .narrow { max-width: 760px; display: grid; gap: var(--space-4); }
+  .figure-block { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
+  .narrow img, .decision__media img, .gallery img { width: 100%; height: auto; border-radius: var(--radius-md); background: var(--panel); }
+
+  .decisions { display: grid; gap: var(--space-6); margin-top: var(--space-5); }
+  .decision { display: grid; gap: var(--space-4); align-items: center; }
+  .decision__text { display: grid; gap: var(--space-3); align-content: start; }
+  .decision__media { display: grid; gap: var(--space-2); }
+  @media (min-width: 768px) {
+    .decision { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
+    /* Alterna texto e imagen */
+    .decision:nth-child(even) .decision__text { order: 2; }
+  }
+
+  .gallery { display: grid; gap: var(--space-5); }
+  .gallery figure { display: grid; gap: var(--space-2); }
+
+  .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-5) var(--space-4); margin-top: var(--space-5); }
+
+  .end { display: grid; gap: var(--space-5); }
+  .end__next { display: grid; gap: var(--space-2); justify-items: start; }
+  @media (min-width: 768px) {
+    .end { grid-template-columns: 1fr auto; align-items: end; }
+  }
+</style>

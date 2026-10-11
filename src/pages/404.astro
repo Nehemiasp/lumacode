@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Screen from '../components/Screen.astro';
+import { route, useT } from '../i18n';
+
+const es = useT('es').t;
+const en = useT('en').t;
+---
+
+<Base
+  lang="es"
+  title={`${es('404.title').replace(/\.$/, '')} · Lumacode Studio`}
+  description={es('meta.home.description')}
+  alternates={{ es: route('home', 'es'), en: route('home', 'en') }}
+  noindex
+>
+  <div class="container nf">
+    <div class="nf__screen"><Screen cursorOnly /></div>
+    <div class="nf__text" data-lang="es">
+      <h1 class="display-l">{es('404.title')}</h1>
+      <a class="link" href={route('home', 'es')}>{es('404.back')}</a>
+    </div>
+    <div class="nf__text" data-lang="en" lang="en" hidden>
+      <h1 class="display-l">{en('404.title')}</h1>
+      <a class="link" href={route('home', 'en')}>{en('404.back')}</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .nf { display: grid; gap: var(--space-5); justify-items: start; padding-block: var(--section-gap); }
+  .nf__screen { width: 160px; }
+  .nf__text { display: grid; gap: var(--space-4); justify-items: start; }
+  .nf__text[hidden] { display: none; }
+</style>
+
+<script>
+  // El 404 se sirve en cualquier URL: el idioma se decide por la ruta
+  if (location.pathname.startsWith('/en/') || location.pathname === '/en') {
+    document.documentElement.lang = 'en';
+    document.querySelector('[data-lang="es"]')?.setAttribute('hidden', '');
+    document.querySelector('[data-lang="en"]')?.removeAttribute('hidden');
+  }
+</script>

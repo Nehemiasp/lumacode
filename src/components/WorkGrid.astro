@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
+import type { Lang } from '../i18n';
+
+interface Props {
+  projects: CollectionEntry<'proyectos'>[];
+  lang: Lang;
+  /** La primera tarjeta es la primera imagen visible. */
+  firstEager?: boolean;
+}
+const { projects, lang, firstEager = false } = Astro.props;
+---
+
+<ul class="work-grid">
+  {projects.map((project, i) => (
+    <li data-servicio={project.data.servicio}>
+      <ProjectCard project={project} lang={lang} eager={firstEager && i === 0} />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .work-grid { display: grid; gap: var(--space-5) var(--space-4); }
+  .work-grid > li[hidden] { display: none; }
+  @media (min-width: 768px) {
+    .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>

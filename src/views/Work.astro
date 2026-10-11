@@ -1,10 +1,83 @@
 ---
 import Base from '../layouts/Base.astro';
+import WorkGrid from '../components/WorkGrid.astro';
+import { getPublishedProjects } from '../lib/projects';
+import { serviceIds, serviceKeys } from '../lib/services';
 import { route, useT, type Lang } from '../i18n';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const { t } = useT(lang);
+
+const projects = await getPublishedProjects();
+// Solo se ofrecen filtros para servicios que tienen proyectos
+const filters = serviceIds.filter((id) => projects.some((p) => p.data.servicio === id));
 ---
-<Base lang={lang} title={t('meta.work.title')} description={t('meta.work.description')} alternates={{ es: route('work', 'es'), en: route('work', 'en') }}>
-  <h1>{t('meta.work.title')}</h1>
+
+<Base
+  lang={lang}
+  title={t('meta.work.title')}
+  description={t('meta.work.description')}
+  alternates={{ es: route('work', 'es'), en: route('work', 'en') }}
+  current="work"
+>
+  <div class="container page-head">
+    <h1 class="display-l">{t('work.page.title')}</h1>
+    {projects.length > 0 && <p class="body-l">{t('work.page.lead')}</p>}
+  </div>
+
+  <section class="section" aria-label={t('work.page.title')}>
+    <div class="container">
+      {projects.length > 0 ? (
+        <>
+          {filters.length > 1 && (
+            <div class="filters" role="group" aria-label={t('work.filter.label')} data-filters hidden>
+              <button type="button" class="filter label" data-filter="all" aria-pressed="true">{t('work.filter.all')}</button>
+              {filters.map((id) => (
+                <button type="button" class="filter label" data-filter={id} aria-pressed="false">{t(serviceKeys[id].filter)}</button>
+              ))}
+            </div>
+          )}
+          <div data-grid><WorkGrid projects={projects} lang={lang} firstEager /></div>
+        </>
+      ) : (
+        <p class="body-l muted empty">{t('work.empty')}</p>
+      )}
+    </div>
+  </section>
 </Base>
+
+<style>
+  .empty { max-width: 52ch; }
+  .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-5); }
+  .filters[hidden] { display: none; }
+  .filter {
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    transition: background-color 150ms, color 150ms, border-color 150ms;
+  }
+  .filter:hover { border-color: var(--muted); }
+  .filter[aria-pressed='true'] { background: var(--text); color: var(--ground); border-color: var(--text); }
+</style>
+
+<script>
+  // Sin JavaScript se muestra todo; con JavaScript aparecen los filtros
+  const bar = document.querySelector<HTMLElement>('[data-filters]');
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  if (bar && grid) {
+    bar.hidden = false;
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const items = [...grid.querySelectorAll<HTMLElement>('li[data-servicio]')];
+    const apply = (value: string) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === value)));
+      items.forEach((li) => {
+        li.hidden = value !== 'all' && li.dataset.servicio !== value;
+      });
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+  }
+</script>

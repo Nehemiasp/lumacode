@@ -1,10 +1,92 @@
 ---
 import Base from '../layouts/Base.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import PackageCard from '../components/PackageCard.astro';
+import FAQ from '../components/FAQ.astro';
+import { config, type PackageId } from '../config';
 import { route, useT, type Lang } from '../i18n';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
-const { t } = useT(lang);
+const { t, parts } = useT(lang);
+
+const services = ['identity', 'comms', 'web', 'ui'] as const;
+const packages = [
+  { id: 'marca', key: 'pkg.brand', featured: false },
+  { id: 'presencia', key: 'pkg.presence', featured: true },
+  { id: 'sitio', key: 'pkg.site', featured: false },
+  { id: 'producto', key: 'pkg.product', featured: false },
+] as const satisfies readonly { id: PackageId; key: 'pkg.brand' | 'pkg.presence' | 'pkg.site' | 'pkg.product'; featured: boolean }[];
+const faqs = ([1, 2, 3, 4] as const).map((n) => ({ q: t(`faq.${n}.q`), a: t(`faq.${n}.a`) }));
 ---
-<Base lang={lang} title={t('meta.services.title')} description={t('meta.services.description')} alternates={{ es: route('services', 'es'), en: route('services', 'en') }}>
-  <h1>{t('meta.services.title')}</h1>
+
+<Base
+  lang={lang}
+  title={t('meta.services.title')}
+  description={t('meta.services.description')}
+  alternates={{ es: route('services', 'es'), en: route('services', 'en') }}
+  current="services"
+>
+  <div class="container page-head">
+    <h1 class="display-l">
+      {t('svc.title.1')}<br />
+      <span class="accent">{t('svc.title.2')}</span>
+    </h1>
+    <p class="body-l">{t('svc.lead')}</p>
+  </div>
+
+  <section class="section" aria-label={t('nav.services')}>
+    <div class="container">
+      {services.map((s) => (
+        <ServiceDetail
+          name={t(`services.${s}.name`)}
+          description={t(`svc.${s}.long`)}
+          deliverablesTitle={t('svc.deliverables')}
+          deliverables={parts(`svc.${s}.list`)}
+          ideal={t(`svc.${s}.ideal`)}
+        />
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--line" id="paquetes" aria-labelledby="paquetes-titulo">
+    <div class="container">
+      <div class="head">
+        <h2 class="heading-1" id="paquetes-titulo">{t('pkg.title')}</h2>
+        <p class="body-l muted">{t('pkg.lead')}</p>
+      </div>
+      <div class="packages">
+        {packages.map((p) => {
+          const [name, forWho, includes] = parts(p.key);
+          const price = config.precios[p.id].trim() || t('pkg.quote');
+          return <PackageCard name={name} forWho={forWho} includes={includes} price={price} featured={p.featured} />;
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--line" aria-labelledby="faq-titulo">
+    <div class="container grid">
+      <h2 class="heading-1 faq-title" id="faq-titulo">{t('faq.title')}</h2>
+      <div class="faq-list"><FAQ items={faqs} /></div>
+    </div>
+  </section>
+
+  <section class="section section--line" aria-labelledby="cierre-titulo">
+    <div class="container close">
+      <h2 class="heading-1" id="cierre-titulo">{t('svc.close.title')}</h2>
+      <a class="btn" href={route('contact', lang)}>{t('svc.close.cta')}</a>
+    </div>
+  </section>
 </Base>
+
+<style>
+  .head { display: grid; gap: var(--space-3); margin-bottom: var(--space-5); }
+  .packages { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-4); }
+  .faq-title, .faq-list { grid-column: 1 / -1; }
+  .close { display: grid; gap: var(--space-4); justify-items: start; }
+  @media (min-width: 768px) {
+    .faq-title { grid-column: 1 / span 4; }
+    .faq-list { grid-column: 5 / -1; }
+  }
+</style>
