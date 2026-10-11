@@ -1,0 +1,138 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 88px;
+  --section-gap: var(--space-6);
+  --gutter: var(--space-3);
+}
+@media (min-width: 768px) {
+  html { --section-gap: var(--space-7); --gutter: var(--space-5); }
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1; }
+
+img, svg { display: block; max-width: 100%; }
+h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+a { color: inherit; }
+::selection { background: var(--luma); color: var(--on-luma); }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Tipografía: una sola familia */
+.display-xl { font-size: clamp(52px, 7.4vw, 96px); line-height: 0.96; font-weight: 600; letter-spacing: -0.045em; }
+.display-l  { font-size: clamp(40px, 5vw, 64px);   line-height: 1;    font-weight: 600; letter-spacing: -0.04em; }
+.heading-1  { font-size: clamp(32px, 3.6vw, 44px); line-height: 1.06; font-weight: 600; letter-spacing: -0.035em; }
+.heading-2  { font-size: clamp(22px, 2.2vw, 28px); line-height: 1.2;  font-weight: 600; letter-spacing: -0.02em; }
+.heading-3  { font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.body-l     { font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; font-weight: 400; }
+.body       { font-size: 16px; line-height: 26px; font-weight: 400; }
+.label      { font-size: 14px; line-height: 20px; font-weight: 500; }
+.caption    { font-size: 13px; line-height: 18px; font-weight: 400; }
+.figure     { font-weight: 700; } /* 700 solo para cifras grandes */
+
+.muted { color: var(--muted); }
+.accent { color: var(--luma-text); }
+p { max-width: 64ch; }
+h1, h2, h3 { text-wrap: balance; }
+
+/* Contenedor y grilla: 12 columnas en desktop, 4 en móvil */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--space-4);
+  row-gap: var(--space-5);
+}
+@media (min-width: 768px) {
+  .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+}
+
+/* Secciones: --space-7 entre secciones (--space-6 en móvil), separadas por líneas, nunca sombras */
+.section { padding-block: calc(var(--section-gap) / 2); }
+.section--line { border-top: 1px solid var(--line); }
+.section--panel { background: var(--panel); padding-block: var(--section-gap); }
+.page-head { padding-top: var(--section-gap); padding-bottom: calc(var(--section-gap) / 2); }
+.page-head > * + * { margin-top: var(--space-4); }
+.page-head .body-l { color: var(--muted); }
+
+/* Botón primario */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 14px 24px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms, opacity 150ms;
+}
+.btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-fg); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.6; cursor: not-allowed; }
+
+/* Link secundario */
+.link {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 150ms;
+}
+.link:hover { color: var(--luma-text); }
+
+/* Logo según el fondo: dos imágenes con clases por tema, sin filtros CSS */
+.logo-light { display: none; }
+:root[data-theme="light"] .logo-dark { display: none; }
+:root[data-theme="light"] .logo-light { display: block; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .logo-dark { display: none; }
+  :root:not([data-theme="dark"]) .logo-light { display: block; }
+}
+.on-screen .logo-dark { display: block; }
+.on-screen .logo-light { display: none; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
