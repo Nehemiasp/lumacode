@@ -119,8 +119,8 @@ h1, h2, h3 { text-wrap: balance; }
   :root:not([data-theme="dark"]) .logo-dark { display: none; }
   :root:not([data-theme="dark"]) .logo-light { display: block; }
 }
-.on-screen .logo-dark { display: block; }
-.on-screen .logo-light { display: none; }
+:root .on-screen .logo-dark { display: block; }
+:root .on-screen .logo-light { display: none; }
 
 .sr-only {
   position: absolute;
