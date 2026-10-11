@@ -1,0 +1,4 @@
+Aquí van los proyectos, uno por archivo .json (el nombre del archivo no importa; la URL sale del campo "slug").
+Mientras no haya proyectos con "publicado": true, el sitio muestra el estado vacío (sin tarjetas).
+Las imágenes se referencian con rutas relativas al archivo, por ejemplo "./imagenes/mi-proyecto/portada.webp".
+Ver el esquema completo en src/content.config.ts y la guía en README.md.

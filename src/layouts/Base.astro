@@ -1,0 +1,42 @@
+---
+import { languages, route, useT, absoluteUrl, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Ruta de esta misma página en cada idioma. */
+  alternates: Record<Lang, string>;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { lang, title, description, alternates, ogImage, noindex = false } = Astro.props;
+const { t } = useT(lang);
+const site = Astro.site!;
+const canonical = absoluteUrl(alternates[lang], site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {languages.map((l) => <link rel="alternate" hreflang={l} href={absoluteUrl(alternates[l], site)} />)}
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl(alternates.es, site)} />
+    {noindex && <meta name="robots" content="noindex" />}
+  </head>
+  <body>
+    <nav>
+      <a href={route('home', lang)}>Lumacode</a>
+      <a href={route('services', lang)}>{t('nav.services')}</a>
+      <a href={route('work', lang)}>{t('nav.work')}</a>
+      <a href={route('contact', lang)}>{t('nav.cta')}</a>
+      <a href={alternates[lang === 'es' ? 'en' : 'es']}>{lang === 'es' ? 'EN' : 'ES'}</a>
+    </nav>
+    <main><slot /></main>
+  </body>
+</html>

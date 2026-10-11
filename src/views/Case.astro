@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { caseUrl, type Lang } from '../i18n';
+import type { CollectionEntry } from 'astro:content';
+interface Props { lang: Lang; project: CollectionEntry<'proyectos'> }
+const { lang, project } = Astro.props;
+const d = project.data;
+---
+<Base lang={lang} title={d.titulo[lang]} description={d.resumen[lang]} alternates={{ es: caseUrl(d.slug, 'es'), en: caseUrl(d.slug, 'en') }}>
+  <h1>{d.titulo[lang]}</h1>
+</Base>

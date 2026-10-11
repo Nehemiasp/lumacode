@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { route, useT, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const { t } = useT(lang);
+---
+<Base lang={lang} title={t('meta.work.title')} description={t('meta.work.description')} alternates={{ es: route('work', 'es'), en: route('work', 'en') }}>
+  <h1>{t('meta.work.title')}</h1>
+</Base>
