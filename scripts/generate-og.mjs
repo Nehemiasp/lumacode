@@ -15,24 +15,33 @@ try {
 }
 
 const root = resolve(import.meta.dirname, '..');
-const font = pathToFileURL(join(root, 'node_modules/@fontsource/archivo/files/archivo-latin-600-normal.woff2')).href;
-const logo = pathToFileURL(join(root, 'public/brand/svg/lumacode-lockup-paper.svg')).href;
+const font = pathToFileURL(join(root, 'node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-700-normal.woff2')).href;
+const logo = pathToFileURL(join(root, 'public/brand/svg/lumacode-lockup-ink.svg')).href;
 
 const copy = {
-  es: ['Diseño que se ve.', 'Código que funciona.'],
-  en: ['Design you can see.', 'Code that works.'],
+  es: ['Diseño que se ve.', 'Código que ', 'funciona.'],
+  en: ['Design you can see.', 'Code that ', 'works.'],
 };
 
+// Rejilla del símbolo ampliada (I = ink, S = stone, L = la luz, · = vacía), cortada por el borde inferior
+const rows = ['SII·', '·SIS', 'ISIL', 'S·SI'];
+const cell = 130, gap = 12, x0 = 640, y0 = 150;
+const cells = rows
+  .flatMap((row, r) => [...row].map((k, c) => ({ k, left: x0 + c * (cell + gap), top: y0 + r * (cell + gap) })))
+  .filter(({ k }) => k !== '·')
+  .map(({ k, left, top }) => `<i class="${k}" style="left:${left}px;top:${top}px"></i>`)
+  .join('');
+
 const html = (lang) => `<!doctype html><html lang="${lang}"><meta charset="utf-8"><style>
-@font-face{font-family:Archivo;font-weight:600;src:url(${font}) format('woff2')}
+@font-face{font-family:"Schibsted Grotesk";font-weight:700;src:url(${font}) format('woff2')}
 *{margin:0;box-sizing:border-box}
-body{width:1200px;height:630px;position:relative;overflow:hidden;background:#0D0F0E;color:#F5F6F1;font-family:Archivo,sans-serif}
+body{width:1200px;height:630px;position:relative;overflow:hidden;background:#F6F5F1;color:#111111;font-family:"Schibsted Grotesk",sans-serif}
 img{position:absolute;left:64px;top:56px;height:44px;width:auto}
-h1{position:absolute;left:72px;top:290px;font-size:64px;line-height:1;font-weight:600;letter-spacing:-0.045em}
-h1 span{display:block;color:#C6F04A}
-.light{position:absolute;left:690px;top:115px;width:400px;height:400px;border-radius:999px;background:#C6F04A}
-.cursor{position:absolute;left:1150px;top:150px;width:100px;height:330px;border-radius:14px;background:#C6F04A}
-</style><body><img src="${logo}" alt=""><h1>${copy[lang][0]}<span>${copy[lang][1]}</span></h1><div class="light"></div><div class="cursor"></div></body></html>`;
+h1{position:absolute;left:72px;top:300px;font-size:60px;line-height:0.98;font-weight:700;letter-spacing:-0.045em}
+h1 b{color:#E8471C;font-weight:700}
+i{position:absolute;width:${cell}px;height:${cell}px}
+i.I{background:#111111}i.S{background:#E6E3DC}i.L{background:#E8471C;border-radius:999px}
+</style><body><img src="${logo}" alt=""><h1>${copy[lang][0]}<br>${copy[lang][1]}<b>${copy[lang][2]}</b></h1>${cells}</body></html>`;
 
 const dir = mkdtempSync(join(tmpdir(), 'lumacode-og-'));
 const browser = await chromium.launch();
