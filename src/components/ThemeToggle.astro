@@ -17,7 +17,7 @@ const { t } = useT(lang);
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--ink);
-    transition: color 150ms, border-color 150ms;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
   .theme-toggle:hover { color: var(--luma-text); border-color: var(--luma-text); }
 </style>
@@ -38,7 +38,9 @@ const { t } = useT(lang);
 
   button?.addEventListener('click', () => {
     const next = isDark() ? 'light' : 'dark';
+    root.classList.add('theme-fade');
     root.dataset.theme = next;
+    setTimeout(() => root.classList.remove('theme-fade'), 600);
     try {
       localStorage.setItem('lumacode-theme', next);
     } catch {

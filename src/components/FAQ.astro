@@ -16,7 +16,14 @@ const { items } = Astro.props;
 
 <style>
   .faq { border-bottom: 1px solid var(--line); }
-  .faq__item { border-top: 1px solid var(--line); }
+  .faq__item { border-top: 1px solid var(--line); interpolate-size: allow-keywords; }
+  /* Apertura y cierre animados (donde el navegador lo soporta; si no, es instantáneo) */
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size var(--dur-slow) var(--ease), content-visibility var(--dur-slow) allow-discrete;
+  }
+  .faq__item[open]::details-content { block-size: auto; }
   .faq__q {
     display: flex;
     justify-content: space-between;

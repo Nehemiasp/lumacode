@@ -55,6 +55,10 @@ Crea un `.json` en `src/content/proyectos/` (puedes agrupar sus imágenes en una
 
 Sin proyectos publicados, Inicio y Trabajo muestran el estado vacío (sin tarjetas). La sección "Resultado" solo aparece si hay `resultados`.
 
+## Movimiento
+
+Scroll suave con inercia mediante [Lenis](https://lenis.darkroom.engineering) (`src/scripts/smooth-scroll.ts`; `lerp` más bajo = deslizamiento más largo). Se desactiva con `prefers-reduced-motion` y en táctil se mantiene el scroll nativo. Las curvas y duraciones están en `--ease`, `--dur` y `--dur-slow` (`src/styles/global.css`).
+
 ## Formulario
 
 Define `PUBLIC_FORM_ENDPOINT` (ver `.env.example`). El envío con JavaScript hace `POST` JSON y redirige a `/contacto/gracias/`. Incluye campo trampa contra spam.

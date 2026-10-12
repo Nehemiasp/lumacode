@@ -46,9 +46,9 @@ const lastIndex = cells.length;
 
   /* Las celdas aparecen en secuencia y la luz llega al final. Sin bucles. */
   .pattern--animate .pattern__cell:not(.pattern__cell--empty) {
-    animation: cell-in 300ms ease-out calc(var(--i) * 40ms) backwards;
+    animation: cell-in var(--dur-slow) var(--ease) calc(var(--i) * 50ms) backwards;
   }
-  @keyframes cell-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes cell-in { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: scale(1); } }
   @media (prefers-reduced-motion: reduce) {
     .pattern--animate .pattern__cell { animation: none; }
   }

@@ -105,7 +105,7 @@ const messages = {
     font-family: var(--font-text);
     font-size: 16px;
     line-height: 24px;
-    transition: border-color 150ms;
+    transition: border-color var(--dur) var(--ease);
   }
   textarea { resize: vertical; min-height: 160px; }
   input[type='text']:hover, input[type='email']:hover, textarea:hover { border-color: var(--graphite); }
@@ -126,7 +126,7 @@ const messages = {
     border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--ink);
-    transition: background-color 150ms, color 150ms, border-color 150ms;
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
   .chip:hover .chip__text { border-color: var(--graphite); }
   .chip input:checked + .chip__text { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }

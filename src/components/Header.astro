@@ -46,7 +46,7 @@ const contact = route('contact', lang);
     </div>
   </div>
 
-  <dialog id="menu" class="menu" aria-label={t('nav.main')}>
+  <dialog id="menu" class="menu" data-lenis-prevent aria-label={t('nav.main')}>
     <div class="container menu__bar">
       <a class="site-header__logo" href={route('home', lang)} aria-label={t('ui.home')}>
         <Logo height={28} />
@@ -85,7 +85,7 @@ const contact = route('contact', lang);
     min-height: 44px;
     color: var(--ink);
     text-decoration: none;
-    transition: color 150ms;
+    transition: color var(--dur) var(--ease);
   }
   .navlink:hover, .navlink[aria-current] { color: var(--luma-text); }
   .site-header__actions { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
@@ -139,6 +139,16 @@ const contact = route('contact', lang);
     overflow-y: auto;
   }
   .menu[open] { display: flex; flex-direction: column; }
+  /* Entrada y salida suaves del panel */
+  .menu {
+    opacity: 0;
+    transform: translateY(-16px);
+    transition: opacity var(--dur) var(--ease), transform var(--dur-slow) var(--ease), overlay var(--dur) allow-discrete, display var(--dur) allow-discrete;
+  }
+  .menu[open] { opacity: 1; transform: none; }
+  @starting-style {
+    .menu[open] { opacity: 0; transform: translateY(-16px); }
+  }
   .menu__bar { display: flex; align-items: center; justify-content: space-between; min-height: 72px; border-bottom: 1px solid var(--line); }
   .menu__nav { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-5); padding-block: var(--space-5); }
   .menu__nav ul { display: flex; flex-direction: column; width: 100%; }
@@ -174,6 +184,9 @@ const contact = route('contact', lang);
   const close = dialog?.querySelector<HTMLButtonElement>('.menu-button--close');
   const lock = (on: boolean) => {
     document.documentElement.style.overflow = on ? 'hidden' : '';
+    // El scroll suave se pausa mientras el menú está abierto
+    if (on) window.__lumacodeScroll?.stop();
+    else window.__lumacodeScroll?.start();
   };
 
   // <dialog> modal: atrapa el foco, inerte el resto de la página y cierra con Esc
