@@ -38,7 +38,7 @@ const filters = serviceIds.filter((id) => projects.some((p) => p.data.servicio =
               ))}
             </div>
           )}
-          <div data-grid><WorkGrid projects={projects} lang={lang} firstEager /></div>
+          <div data-grid><WorkGrid projects={projects} lang={lang} firstEager heading="h2" /></div>
         </>
       ) : (
         <p class="body-l graphite empty">{t('work.empty')}</p>

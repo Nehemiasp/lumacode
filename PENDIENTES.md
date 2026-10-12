@@ -9,5 +9,4 @@ Cosas que el sitio no puede resolver solo. Nada de esto aparece como marcador en
 - [ ] Definir los precios de los paquetes (o dejarlos en "Cotización") y el tiempo de respuesta, en `src/config.ts`.
 - [ ] Cargar los primeros 2 a 4 proyectos con imágenes reales y sus decisiones de diseño (ver README, sección "Cargar un proyecto").
 - [ ] Conseguir las URLs reales de WhatsApp Business, LinkedIn, Instagram y Behance y ponerlas en `src/config.ts`.
-- [ ] Decidir si el sitio abre siempre en oscuro o respeta el tema del sistema: para forzar oscuro, eliminar el bloque `@media (prefers-color-scheme: light)` de `src/styles/tokens.css` (y la regla equivalente del logo en `src/styles/global.css`).
 - [ ] Cuando se definan los tiempos de entrega, añadir semanas concretas a la respuesta de la pregunta frecuente "¿Cuánto tarda un proyecto?" (`faq.1.a` en `src/i18n/*.json`).

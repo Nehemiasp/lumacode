@@ -9,8 +9,10 @@ interface Props {
   lang: Lang;
   /** La primera imagen visible no se carga en diferido. */
   eager?: boolean;
+  /** Nivel del título: h3 bajo un h2 (inicio), h2 bajo el h1 (lista de trabajo). */
+  heading?: 'h2' | 'h3';
 }
-const { project, lang, eager = false } = Astro.props;
+const { project, lang, eager = false, heading: Heading = 'h3' } = Astro.props;
 const { t } = useT(lang);
 const d = project.data;
 ---
@@ -19,7 +21,7 @@ const d = project.data;
   <div class="card__media">
     <Image src={d.portada} alt="" widths={[480, 720, 960]} sizes="(min-width: 768px) 46vw, 92vw" format="webp" loading={eager ? 'eager' : 'lazy'} class="card__img" />
   </div>
-  <h3 class="heading-3 card__title">{d.titulo[lang]}</h3>
+  <Heading class="heading-3 card__title">{d.titulo[lang]}</Heading>
   <p class="label graphite">{t(serviceName(d.servicio))} · {d.anio}</p>
 </a>
 

@@ -8,14 +8,15 @@ interface Props {
   lang: Lang;
   /** La primera tarjeta es la primera imagen visible. */
   firstEager?: boolean;
+  heading?: 'h2' | 'h3';
 }
-const { projects, lang, firstEager = false } = Astro.props;
+const { projects, lang, firstEager = false, heading = 'h3' } = Astro.props;
 ---
 
 <ul class="work-grid">
   {projects.map((project, i) => (
     <li data-servicio={project.data.servicio}>
-      <ProjectCard project={project} lang={lang} eager={firstEager && i === 0} />
+      <ProjectCard project={project} lang={lang} eager={firstEager && i === 0} heading={heading} />
     </li>
   ))}
 </ul>

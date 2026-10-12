@@ -1,6 +1,7 @@
 # Lumacode Studio
 
-Sitio web de Lumacode Studio. Astro (estático), bilingüe (español por defecto, inglés en `/en/`), oscuro por defecto.
+Sitio web de Lumacode Studio. Astro (estático), bilingüe (español por defecto, inglés en `/en/`), tema claro por defecto con tema oscuro opcional.
+Identidad: Schibsted Grotesk + Inter Tight, papel `#F6F5F1`, tinta `#111111` y una sola luz bermellón `#E8471C`.
 
 ```bash
 npm install
@@ -16,9 +17,9 @@ npm run preview  # sirve dist/
 | `src/i18n/es.json`, `en.json` | Todos los textos. Ninguno va escrito en los componentes. |
 | `src/i18n/index.ts` | Traductor `useT(lang)` y mapa de rutas por idioma. |
 | `src/config.ts` | Correo, redes, precios de paquetes, tiempo de respuesta, endpoint del formulario. |
-| `src/styles/tokens.css` | Única fuente de colores, espacios, radios y tamaños. |
+| `src/styles/tokens.css` | Única fuente de colores, espacios, radios y tamaños (tema claro en `:root`, oscuro en `data-theme`, y `.section-ink` para bloques oscuros fijos). |
 | `src/styles/global.css` | Tipografía, grilla, botones, utilidades. |
-| `src/components/` | Componentes (Header, Footer, Screen, ProjectCard, ContactForm…). |
+| `src/components/` | Componentes (Header, Footer, Pattern, ProjectCard, ContactForm…). |
 | `src/views/` | Una vista por página; `src/pages/` solo las monta en cada idioma. |
 | `src/content/proyectos/` | Colección de proyectos (JSON). |
 | `public/brand/`, `brand/` | Kit de logo (SVG y PNG). El logo se usa siempre como archivo. |
