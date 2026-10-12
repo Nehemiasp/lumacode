@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import Screen from '../components/Screen.astro';
+import Pattern from '../components/Pattern.astro';
 import WorkGrid from '../components/WorkGrid.astro';
 import ServiceRow from '../components/ServiceRow.astro';
 import Differentiator from '../components/Differentiator.astro';
 import ProcessStep from '../components/ProcessStep.astro';
-import ContactBlock from '../components/ContactBlock.astro';
+import ContactSection from '../components/ContactSection.astro';
 import { getPublishedProjects } from '../lib/projects';
+import { splitLast } from '../lib/text';
 import { route, useT, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -16,6 +17,7 @@ const { t, parts } = useT(lang);
 const projects = (await getPublishedProjects()).slice(0, 4);
 const services = ['identity', 'comms', 'web', 'ui'] as const;
 const steps = [1, 2, 3, 4] as const;
+const [titleHead, titleAccent] = splitLast(t('hero.title.2'));
 ---
 
 <Base
@@ -27,20 +29,21 @@ const steps = [1, 2, 3, 4] as const;
   organization
 >
   <section class="hero" aria-labelledby="hero-titulo">
-    <div class="container hero__inner">
-      <div class="hero__screen">
-        <Screen animate />
-      </div>
-      <div class="hero__text">
-        <h1 class="display-xl" id="hero-titulo">
-          {t('hero.title.1')}<br />
-          <span class="accent">{t('hero.title.2')}</span>
-        </h1>
-        <p class="body-l muted">{t('hero.lead')}</p>
-        <div class="hero__actions">
-          <a class="btn" href={route('contact', lang)}>{t('hero.cta')}</a>
-          <a class="link" href="#trabajo">{t('hero.secondary')}</a>
+    <div class="container">
+      <div class="hero__pattern-mobile"><Pattern animate compact /></div>
+      <h1 class="display-xl" id="hero-titulo">
+        {t('hero.title.1')}<br />
+        {titleHead}<span class="accent">{titleAccent}</span>
+      </h1>
+      <div class="hero__row">
+        <div class="hero__text">
+          <p class="body-l">{t('hero.lead')}</p>
+          <div class="hero__actions">
+            <a class="btn" href={route('contact', lang)}>{t('hero.cta')}</a>
+            <a class="link" href="#trabajo">{t('hero.secondary')}</a>
+          </div>
         </div>
+        <div class="hero__pattern"><Pattern animate /></div>
       </div>
     </div>
   </section>
@@ -49,20 +52,20 @@ const steps = [1, 2, 3, 4] as const;
     <div class="container">
       <div class="section-head">
         <h2 class="heading-1" id="trabajo-titulo">{t('work.title')}</h2>
-        {projects.length > 0 && <a class="link" href={route('work', lang)}>{t('work.all')}</a>}
+        {projects.length > 0 && <a class="link label" href={route('work', lang)}>{t('work.all')}</a>}
       </div>
-      {projects.length > 0 ? <WorkGrid projects={projects} lang={lang} /> : <p class="body-l muted empty">{t('work.empty')}</p>}
+      {projects.length > 0 ? <WorkGrid projects={projects} lang={lang} /> : <p class="body-l graphite empty">{t('work.empty')}</p>}
     </div>
   </section>
 
-  <section class="section section--panel" id="servicios" aria-labelledby="servicios-titulo">
+  <section class="section-ink band" id="servicios" aria-labelledby="servicios-titulo">
     <div class="container grid">
-      <div class="services__intro">
+      <div class="col-title services__intro">
         <h2 class="heading-1" id="servicios-titulo">{t('services.title')}</h2>
-        <p class="body-l muted">{t('services.lead')}</p>
-        <a class="link" href={route('services', lang)}>{t('services.more')}</a>
+        <p class="body graphite">{t('services.lead')}</p>
+        <a class="link label" href={route('services', lang)}>{t('services.more')}</a>
       </div>
-      <div class="services__list">
+      <div class="col-body">
         {services.map((s) => (
           <ServiceRow name={t(`services.${s}.name`)} description={t(`services.${s}.desc`)} includes={t(`services.${s}.includes`)} />
         ))}
@@ -84,32 +87,33 @@ const steps = [1, 2, 3, 4] as const;
     </div>
   </section>
 
-  <section class="section section--line" id="estudio" aria-labelledby="estudio-titulo">
+  <section class="section--stone" id="estudio" aria-labelledby="estudio-titulo">
     <div class="container grid">
       <h2 class="heading-1 studio__title" id="estudio-titulo">{t('studio.title')}</h2>
       <div class="studio__text">
         <p class="body-l">{t('studio.p1')}</p>
-        <p class="body-l muted">{t('studio.p2')}</p>
+        <p class="body-l">{t('studio.p2')}</p>
       </div>
     </div>
   </section>
 
-  <ContactBlock lang={lang} />
+  <ContactSection lang={lang} />
 </Base>
 
 <style>
-  .hero { padding-block: var(--space-6) calc(var(--section-gap) / 2); }
-  .hero__inner { display: flex; flex-direction: column; gap: var(--space-5); }
-  .hero__screen { width: 200px; }
-  .hero__text { display: grid; gap: var(--space-4); justify-items: start; }
-  .hero__text .body-l { max-width: 52ch; }
-  .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-5); margin-top: var(--space-2); }
+  .hero { padding-block: var(--space-5) calc(var(--section-gap) / 2); }
+  .hero__pattern-mobile { margin-bottom: var(--space-4); }
+  .hero__pattern { display: none; }
+  .hero__row { display: grid; gap: var(--space-4); margin-top: var(--space-5); }
+  .hero__text { display: grid; gap: var(--space-4); align-content: end; justify-items: start; }
+  .hero__text .body-l { max-width: 44ch; }
+  .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); width: 100%; }
+  .hero__actions .btn { width: 100%; }
 
   .section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-5); }
   .empty { max-width: 52ch; }
 
-  .services__intro { grid-column: 1 / -1; display: grid; gap: var(--space-3); align-content: start; justify-items: start; }
-  .services__list { grid-column: 1 / -1; }
+  .services__intro { display: grid; gap: var(--space-3); align-content: start; justify-items: start; }
 
   .process {
     display: grid;
@@ -118,17 +122,18 @@ const steps = [1, 2, 3, 4] as const;
     margin-top: var(--space-5);
   }
 
-  .studio__title { grid-column: 1 / -1; }
-  .studio__text { grid-column: 1 / -1; display: grid; gap: var(--space-4); }
+  .section--stone { padding-block: var(--section-gap); }
+  .studio__title, .studio__text { grid-column: 1 / -1; }
+  .studio__text { display: grid; gap: var(--space-4); }
 
   @media (min-width: 768px) {
-    .hero { padding-block: var(--space-7) calc(var(--section-gap) / 2); }
-    .hero__inner { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-6); }
-    .hero__text { flex: 0 1 60%; }
-    .hero__screen { order: 2; flex: 0 1 40%; width: auto; display: flex; justify-content: flex-end; }
-    .services__intro { grid-column: 1 / span 4; }
-    .services__list { grid-column: 5 / -1; }
-    .services__list :global(.row:first-child) { border-top: 0; padding-top: 0; }
+    .hero { padding-top: var(--space-6); }
+    .hero__pattern-mobile { display: none; }
+    .hero__pattern { display: block; }
+    .hero__row { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-4); align-items: end; margin-top: var(--space-6); }
+    .hero__text { grid-column: 1 / span 6; }
+    .hero__pattern { grid-column: 9 / -1; justify-self: end; width: 100%; max-width: 420px; }
+    .hero__actions .btn { width: auto; }
     .studio__title { grid-column: 1 / span 5; }
     .studio__text { grid-column: 7 / -1; }
   }

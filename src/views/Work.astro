@@ -21,9 +21,9 @@ const filters = serviceIds.filter((id) => projects.some((p) => p.data.servicio =
   alternates={{ es: route('work', 'es'), en: route('work', 'en') }}
   current="work"
 >
-  <div class="container page-head">
+  <div class="container page-head head">
     <h1 class="display-l">{t('work.page.title')}</h1>
-    {projects.length > 0 && <p class="body-l">{t('work.page.lead')}</p>}
+    {projects.length > 0 && <p class="body-l graphite">{t('work.page.lead')}</p>}
   </div>
 
   <section class="section" aria-label={t('work.page.title')}>
@@ -41,13 +41,14 @@ const filters = serviceIds.filter((id) => projects.some((p) => p.data.servicio =
           <div data-grid><WorkGrid projects={projects} lang={lang} firstEager /></div>
         </>
       ) : (
-        <p class="body-l muted empty">{t('work.empty')}</p>
+        <p class="body-l graphite empty">{t('work.empty')}</p>
       )}
     </div>
   </section>
 </Base>
 
 <style>
+  .head { display: grid; gap: var(--space-4); }
   .empty { max-width: 52ch; }
   .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-5); }
   .filters[hidden] { display: none; }
@@ -57,11 +58,11 @@ const filters = serviceIds.filter((id) => projects.some((p) => p.data.servicio =
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     background: transparent;
-    color: var(--text);
+    color: var(--ink);
     transition: background-color 150ms, color 150ms, border-color 150ms;
   }
-  .filter:hover { border-color: var(--muted); }
-  .filter[aria-pressed='true'] { background: var(--text); color: var(--ground); border-color: var(--text); }
+  .filter:hover { border-color: var(--graphite); }
+  .filter[aria-pressed='true'] { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
 </style>
 
 <script>

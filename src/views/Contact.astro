@@ -3,12 +3,16 @@ import Base from '../layouts/Base.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { config } from '../config';
 import { channels } from '../lib/channels';
+import { splitLast } from '../lib/text';
 import { route, useT, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const { t } = useT(lang);
 const social = channels();
+const whatsapp = social.find((c) => c.id === 'whatsapp');
+const networks = social.filter((c) => c.id !== 'whatsapp');
+const [titleHead, titleAccent] = splitLast(t('form.title'));
 ---
 
 <Base
@@ -20,19 +24,30 @@ const social = channels();
 >
   <div class="container grid contact">
     <div class="contact__info">
-      <h1 class="display-l">{t('form.title')}</h1>
-      <p class="body-l muted">{t('form.lead')}</p>
-      <div class="channels">
-        <p class="label muted">{t('form.channels')}</p>
-        <ul class="channels__list">
-          <li><a class="heading-3 link" href={`mailto:${config.email}`}>{config.email}</a></li>
-          {social.map((c) => (
-            <li>
-              <a class="heading-3 link" href={c.href} target="_blank" rel="noopener">{c.label}<span class="sr-only"> {t('ui.external')}</span></a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <h1 class="display-l">{titleHead}<span class="accent">{titleAccent}</span></h1>
+      <p class="body-l">{t('form.lead')}</p>
+      <dl class="channels">
+        <div class="channels__row">
+          <dt class="label graphite">{t('form.channel.email')}</dt>
+          <dd><a class="body link accent-text" href={`mailto:${config.email}`}>{config.email}</a></dd>
+        </div>
+        {whatsapp && (
+          <div class="channels__row">
+            <dt class="label graphite">WhatsApp</dt>
+            <dd><a class="body link" href={whatsapp.href} target="_blank" rel="noopener">WhatsApp<span class="sr-only"> {t('ui.external')}</span></a></dd>
+          </div>
+        )}
+        {networks.length > 0 && (
+          <div class="channels__row">
+            <dt class="label graphite">{t('form.social')}</dt>
+            <dd class="channels__links">
+              {networks.map((c) => (
+                <a class="body link" href={c.href} target="_blank" rel="noopener">{c.label}<span class="sr-only"> {t('ui.external')}</span></a>
+              ))}
+            </dd>
+          </div>
+        )}
+      </dl>
     </div>
     <div class="contact__form">
       <ContactForm lang={lang} />
@@ -41,13 +56,16 @@ const social = channels();
 </Base>
 
 <style>
-  .contact { padding-block: var(--section-gap) calc(var(--section-gap) / 2); }
+  .contact { padding-block: var(--space-5) calc(var(--section-gap) / 2); }
   .contact__info { grid-column: 1 / -1; display: grid; gap: var(--space-4); align-content: start; }
-  .contact__form { grid-column: 1 / -1; }
-  .channels { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
-  .channels__list { display: grid; gap: var(--space-2); justify-items: start; }
+  .contact__form { grid-column: 1 / -1; padding: var(--space-4); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-0); }
+  .channels { margin: var(--space-3) 0 0; border-bottom: 1px solid var(--line); }
+  .channels__row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding-block: var(--space-3); border-top: 1px solid var(--line); }
+  .channels dd { margin: 0; text-align: right; }
+  .channels__links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-1) var(--space-3); }
   @media (min-width: 768px) {
-    .contact__info { grid-column: 1 / span 5; }
-    .contact__form { grid-column: 7 / -1; }
+    .contact { padding-top: var(--space-6); }
+    .contact__info { grid-column: 1 / span 6; }
+    .contact__form { grid-column: 8 / -1; padding: var(--space-5); }
   }
 </style>

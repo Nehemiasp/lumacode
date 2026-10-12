@@ -4,6 +4,7 @@ import ServiceDetail from '../components/ServiceDetail.astro';
 import PackageCard from '../components/PackageCard.astro';
 import FAQ from '../components/FAQ.astro';
 import { config, type PackageId } from '../config';
+import { splitLast } from '../lib/text';
 import { route, useT, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -18,6 +19,7 @@ const packages = [
   { id: 'producto', key: 'pkg.product', featured: false },
 ] as const satisfies readonly { id: PackageId; key: 'pkg.brand' | 'pkg.presence' | 'pkg.site' | 'pkg.product'; featured: boolean }[];
 const faqs = ([1, 2, 3, 4] as const).map((n) => ({ q: t(`faq.${n}.q`), a: t(`faq.${n}.a`) }));
+const [titleHead, titleAccent] = splitLast(t('svc.title.2'));
 ---
 
 <Base
@@ -27,12 +29,12 @@ const faqs = ([1, 2, 3, 4] as const).map((n) => ({ q: t(`faq.${n}.q`), a: t(`faq
   alternates={{ es: route('services', 'es'), en: route('services', 'en') }}
   current="services"
 >
-  <div class="container page-head">
-    <h1 class="display-l">
+  <div class="container page-head head">
+    <h1 class="display-xl">
       {t('svc.title.1')}<br />
-      <span class="accent">{t('svc.title.2')}</span>
+      {titleHead}<span class="accent">{titleAccent}</span>
     </h1>
-    <p class="body-l">{t('svc.lead')}</p>
+    <p class="body-l head__lead">{t('svc.lead')}</p>
   </div>
 
   <section class="section" aria-label={t('nav.services')}>
@@ -49,11 +51,11 @@ const faqs = ([1, 2, 3, 4] as const).map((n) => ({ q: t(`faq.${n}.q`), a: t(`faq
     </div>
   </section>
 
-  <section class="section section--line" id="paquetes" aria-labelledby="paquetes-titulo">
+  <section class="section--stone" id="paquetes" aria-labelledby="paquetes-titulo">
     <div class="container">
-      <div class="head">
+      <div class="pkg-head">
         <h2 class="heading-1" id="paquetes-titulo">{t('pkg.title')}</h2>
-        <p class="body-l muted">{t('pkg.lead')}</p>
+        <p class="body graphite">{t('pkg.lead')}</p>
       </div>
       <div class="packages">
         {packages.map((p) => {
@@ -65,14 +67,14 @@ const faqs = ([1, 2, 3, 4] as const).map((n) => ({ q: t(`faq.${n}.q`), a: t(`faq
     </div>
   </section>
 
-  <section class="section section--line" aria-labelledby="faq-titulo">
+  <section class="section" aria-labelledby="faq-titulo">
     <div class="container grid">
-      <h2 class="heading-1 faq-title" id="faq-titulo">{t('faq.title')}</h2>
-      <div class="faq-list"><FAQ items={faqs} /></div>
+      <h2 class="heading-1 col-title" id="faq-titulo">{t('faq.title')}</h2>
+      <div class="col-body"><FAQ items={faqs} /></div>
     </div>
   </section>
 
-  <section class="section section--line" aria-labelledby="cierre-titulo">
+  <section class="section-ink band" aria-labelledby="cierre-titulo">
     <div class="container close">
       <h2 class="heading-1" id="cierre-titulo">{t('svc.close.title')}</h2>
       <a class="btn" href={route('contact', lang)}>{t('svc.close.cta')}</a>
@@ -81,12 +83,18 @@ const faqs = ([1, 2, 3, 4] as const).map((n) => ({ q: t(`faq.${n}.q`), a: t(`faq
 </Base>
 
 <style>
-  .head { display: grid; gap: var(--space-3); margin-bottom: var(--space-5); }
-  .packages { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-4); }
-  .faq-title, .faq-list { grid-column: 1 / -1; }
-  .close { display: grid; gap: var(--space-4); justify-items: start; }
+  .head { display: grid; gap: var(--space-4); align-items: end; }
+  .head__lead { max-width: 36ch; }
+  .section--stone { padding-block: var(--section-gap); }
+  .pkg-head { display: grid; gap: var(--space-2); margin-bottom: var(--space-5); align-items: end; }
+  .packages { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .close { display: grid; gap: var(--space-4); justify-items: start; align-items: center; }
   @media (min-width: 768px) {
-    .faq-title { grid-column: 1 / span 4; }
-    .faq-list { grid-column: 5 / -1; }
+    .head { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-4); }
+    .head h1 { grid-column: 1 / span 8; }
+    .head__lead { grid-column: 10 / -1; padding-bottom: var(--space-3); }
+    .pkg-head { grid-template-columns: 1fr auto; }
+    .pkg-head p { max-width: 36ch; }
+    .close { grid-template-columns: 1fr auto; }
   }
 </style>
