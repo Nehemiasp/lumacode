@@ -16,7 +16,6 @@
   "ui.home": "Lumacode Studio, inicio",
   "ui.external": "(se abre en otra pestaña)",
   "ui.required": "Los campos con * son obligatorios.",
-
   "hero.title.1": "Diseño que se ve.",
   "hero.title.2": "Código que funciona.",
   "hero.lead": "Lumacode es un estudio de diseño y desarrollo. Creamos marcas, piezas de comunicación, sitios web e interfaces, y las construimos para que funcionen.",
@@ -59,7 +58,6 @@
   "contact.title.1": "¿Tienes un proyecto?",
   "contact.title.2": "Hablemos.",
   "contact.cta": "Escribir un mensaje",
-
   "svc.title.1": "Diseño y desarrollo,",
   "svc.title.2": "en el mismo lugar.",
   "svc.lead": "Cuatro servicios que se pueden contratar por separado o juntos. Lo que diseñamos, lo construimos.",
@@ -94,7 +92,6 @@
   "faq.4.a": "Sí. Todo el proceso es remoto, en español o en inglés.",
   "svc.close.title": "¿No sabes qué paquete elegir?",
   "svc.close.cta": "Cuéntanos tu proyecto",
-
   "work.page.title": "Trabajo",
   "work.page.lead": "Marcas, campañas, sitios y productos digitales. Cada proyecto con su propio caso.",
   "work.filter.label": "Filtrar por servicio",
@@ -113,10 +110,8 @@
   "case.result": "Resultado",
   "case.next": "Siguiente proyecto",
   "case.cta": "¿Un proyecto parecido? Hablemos",
-
   "form.title": "Cuéntanos tu proyecto.",
   "form.lead": "Responde lo que puedas. Te escribimos para entender lo que necesitas y enviarte una propuesta.",
-  "form.channels": "También puedes escribirnos por",
   "form.name": "Nombre",
   "form.email": "Correo",
   "form.company": "Empresa o marca (opcional)",
@@ -136,7 +131,6 @@
   "thanks.back": "Volver al inicio",
   "404.title": "Esta página está apagada.",
   "404.back": "Ir al inicio",
-
   "meta.home.title": "Lumacode Studio · Diseño que se ve. Código que funciona.",
   "meta.home.description": "Estudio de diseño y desarrollo: identidad de marca, comunicación visual, sitios web y diseño de interfaces.",
   "meta.services.title": "Servicios y paquetes · Lumacode Studio",
@@ -144,5 +138,8 @@
   "meta.work.title": "Trabajo · Lumacode Studio",
   "meta.work.description": "Casos de estudio de marcas, campañas, sitios y productos digitales.",
   "meta.contact.title": "Contacto · Lumacode Studio",
-  "meta.contact.description": "Cuéntanos tu proyecto y te enviamos una propuesta."
+  "meta.contact.description": "Cuéntanos tu proyecto y te enviamos una propuesta.",
+  "case.decision": "Decisión {n}",
+  "form.social": "Redes",
+  "form.channel.email": "Correo"
 }

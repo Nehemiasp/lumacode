@@ -1,23 +1,26 @@
 Kit de logo de Lumacode
 
 svg/  Archivos vectoriales. Úsalos siempre que sea posible (web, impresión, diseño).
-png/  Versiones rasterizadas con fondo transparente (salvo favicon y avatar, que llevan su pantalla).
+png/  Versiones rasterizadas con fondo transparente (salvo favicon y avatar, que llevan fondo negro).
 
 Qué versión usar
-- lockup-paper: principal, sobre fondos oscuros.
-- lockup-ink: sobre fondos claros (documentos, facturas, impresos).
+- lockup-ink: principal, sobre fondos claros.
+- lockup-paper: sobre fondos oscuros.
 - lockup-mono: una sola tinta (sellos, grabados, blanco y negro).
-- wordmark-paper / wordmark-ink: cuando el símbolo ya aparece cerca.
-- symbol: sobre fondos claros o medios. symbol-on-dark: sobre fondos oscuros.
+- wordmark-ink / wordmark-paper: cuando el símbolo ya aparece cerca.
+- symbol-ink / symbol-paper: espacios cuadrados, marca de agua, patrones.
 - avatar: foto de perfil en redes. favicon: ícono del sitio y de app.
 
+El símbolo
+Tres cuadrados (el código, la estructura) y un círculo (la luz, el diseño).
+
 Reglas
-- Área de respeto: la mitad del lado del símbolo alrededor del logo.
-- Tamaño mínimo: lockup de 100 px de ancho (25 mm impreso); símbolo de 16 px.
-- La luz (círculo) y el cursor (barra) van siempre en lima #C6F04A, salvo en la versión mono.
-- No quitar la pantalla, no cambiar el orden círculo-cursor, no añadir brillos, sombras ni degradados.
+- Área de respeto: la mitad de la altura del símbolo alrededor del logo.
+- Tamaño mínimo: lockup de 120 px de ancho (30 mm impreso); símbolo de 16 px.
+- El círculo va siempre en bermellón #E8471C, salvo en la versión mono.
+- No rotar, deformar, separar el círculo ni añadir sombras, brillos o degradados.
 - No reescribir el wordmark con la fuente: ya está convertido a trazos.
 
 Colores
-Fondo oscuro #0D0F0E · Pantalla #121513 · Lima #C6F04A · Texto claro #F5F6F1 · Lima para texto en claro #4C6A00
-Tipografía: Archivo (Google Fonts, licencia SIL OFL), pesos 400, 500, 600 y 700.
+Paper #F6F5F1 · Ink #111111 · Stone #E6E3DC · Graphite #5C5A55 · Luz #E8471C · Luz para texto pequeño #C23A12
+Tipografía: Schibsted Grotesk (titulares, 600 y 700) e Inter Tight (texto, 400 y 500). Google Fonts, licencia SIL OFL.

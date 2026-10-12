@@ -16,7 +16,6 @@
   "ui.home": "Lumacode Studio, home",
   "ui.external": "(opens in a new tab)",
   "ui.required": "Fields marked * are required.",
-
   "hero.title.1": "Design you can see.",
   "hero.title.2": "Code that works.",
   "hero.lead": "Lumacode is a design and development studio. We create brands, communication, websites and interfaces, and we build them to work.",
@@ -59,7 +58,6 @@
   "contact.title.1": "Have a project?",
   "contact.title.2": "Let's talk.",
   "contact.cta": "Send a message",
-
   "svc.title.1": "Design and development,",
   "svc.title.2": "in one place.",
   "svc.lead": "Four services you can hire separately or together. What we design, we build.",
@@ -94,7 +92,6 @@
   "faq.4.a": "Yes. The whole process is remote, in Spanish or English.",
   "svc.close.title": "Not sure which package fits?",
   "svc.close.cta": "Tell us about your project",
-
   "work.page.title": "Work",
   "work.page.lead": "Brands, campaigns, websites and digital products. Each project with its own case study.",
   "work.filter.label": "Filter by service",
@@ -113,10 +110,8 @@
   "case.result": "Outcome",
   "case.next": "Next project",
   "case.cta": "A similar project? Let's talk",
-
   "form.title": "Tell us about your project.",
   "form.lead": "Answer what you can. We'll write back to understand what you need and send you a proposal.",
-  "form.channels": "You can also reach us on",
   "form.name": "Name",
   "form.email": "Email",
   "form.company": "Company or brand (optional)",
@@ -136,7 +131,6 @@
   "thanks.back": "Back to home",
   "404.title": "This page is switched off.",
   "404.back": "Go to home",
-
   "meta.home.title": "Lumacode Studio · Design you can see. Code that works.",
   "meta.home.description": "Design and development studio: brand identity, visual communication, websites and interface design.",
   "meta.services.title": "Services and packages · Lumacode Studio",
@@ -144,5 +138,8 @@
   "meta.work.title": "Work · Lumacode Studio",
   "meta.work.description": "Case studies of brands, campaigns, websites and digital products.",
   "meta.contact.title": "Contact · Lumacode Studio",
-  "meta.contact.description": "Tell us about your project and we'll send you a proposal."
+  "meta.contact.description": "Tell us about your project and we'll send you a proposal.",
+  "case.decision": "Decision {n}",
+  "form.social": "Social",
+  "form.channel.email": "Email"
 }
