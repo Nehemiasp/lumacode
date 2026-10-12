@@ -1,73 +1,53 @@
 :root {
-  /* Color: tema oscuro (principal) */
-  --ground: #0D0F0E;        /* fondo de página */
-  --surface: #161917;       /* formularios, menús */
-  --panel: #1D211F;         /* bloques de contraste, fondos de imagen. Nunca texto */
-  --line: #2B302D;          /* líneas de 1px, bordes de campos */
-  --text: #F5F6F1;          /* texto principal (17.7:1) */
-  --muted: #9AA39D;         /* texto secundario (7.4:1) */
-  --luma: #C6F04A;          /* la luz: círculo, cursor, botón primario */
-  --luma-text: #C6F04A;     /* acento como texto: links, una palabra */
-  --on-luma: #121513;       /* texto sobre luma */
-  --screen: #121513;        /* bloques oscuros con la luz dentro, en cualquier tema */
-  --screen-raised: #232825; /* pantalla sobre fondo ya oscuro */
+  /* Color: tema claro (principal) */
+  --paper: #F6F5F1;      /* fondo de página: blanco cálido */
+  --surface: #FFFFFF;    /* formularios, tablas, menús */
+  --stone: #E6E3DC;      /* bloques de contraste, fondos de imagen. Nunca texto */
+  --line: #D9D6CE;       /* líneas de 1px, bordes de campos */
+  --ink: #111111;        /* texto principal, logo, botón primario (17.3:1) */
+  --graphite: #5C5A55;   /* texto secundario, metadatos (6.3:1) */
+  --luma: #E8471C;       /* la luz: círculo, gráficos, titulares de 24px o más */
+  --luma-text: #C23A12;  /* acento como texto pequeño: links, una palabra (4.9:1) */
+  --on-luma: #111111;    /* texto sobre luma (4.8:1) */
+  --on-ink: #F6F5F1;     /* texto sobre ink */
+  --pattern-dark: #2A2927; /* cuadros apagados del patrón sobre ink */
 
-  /* Derivados de los tokens anteriores (no añaden colores nuevos) */
-  --hero-screen: var(--panel);  /* fondo de la Pantalla: --panel en oscuro, --screen en claro */
-  --btn-bg: var(--luma);        /* botón primario */
-  --btn-fg: var(--on-luma);
-  --btn-hover-bg: var(--text);
-  --btn-hover-fg: var(--ground);
-  --accent-shape: var(--luma);  /* formas decorativas fuera de bloques --screen */
-  --focus: var(--luma-text);
-
-  /* Tipografía: una sola familia */
-  --font-sans: "Archivo", system-ui, sans-serif;
+  /* Tipografía */
+  --font-display: "Schibsted Grotesk", "Inter Tight", system-ui, sans-serif;
+  --font-text: "Inter Tight", system-ui, sans-serif;
 
   /* Espaciado */
   --space-1: 4px;  --space-2: 8px;  --space-3: 16px;  --space-4: 24px;
   --space-5: 40px; --space-6: 64px; --space-7: 112px;
 
   /* Radios */
-  --radius-sm: 6px;     /* botones, campos */
-  --radius-md: 12px;    /* imágenes, tarjetas */
-  --radius-lg: 24px;    /* paneles grandes, pantalla del hero */
+  --radius-0: 0;        /* bloques, imágenes, tarjetas */
+  --radius-sm: 3px;     /* botones, campos */
   --radius-full: 999px; /* solo la luz */
 
   --container: 1360px;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-:root[data-theme="light"] {
-  --ground: #F5F6F1; --surface: #FFFFFF; --panel: #E8EBE3; --line: #D5D9CF;
-  --text: #121513; --muted: #59605B; --luma-text: #4C6A00;
-  --hero-screen: var(--screen);
-  --btn-bg: var(--text); --btn-fg: var(--ground);
-  --btn-hover-bg: var(--luma-text); --btn-hover-fg: var(--ground);
-  --accent-shape: var(--luma-text);
-  color-scheme: light;
-  /* --luma, --on-luma, --screen y --screen-raised no cambian */
+:root[data-theme="dark"] {
+  --paper: #111111; --surface: #1A1A19; --stone: #2A2927; --line: #34332F;
+  --ink: #F6F5F1; --graphite: #A8A49B; --luma-text: #FF6A3D; --on-ink: #111111;
+  color-scheme: dark;
+  /* --luma y --on-luma no cambian */
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --ground: #F5F6F1; --surface: #FFFFFF; --panel: #E8EBE3; --line: #D5D9CF;
-    --text: #121513; --muted: #59605B; --luma-text: #4C6A00;
-    --hero-screen: var(--screen);
-    --btn-bg: var(--text); --btn-fg: var(--ground);
-    --btn-hover-bg: var(--luma-text); --btn-hover-fg: var(--ground);
-    --accent-shape: var(--luma-text);
-    color-scheme: light;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111111; --surface: #1A1A19; --stone: #2A2927; --line: #34332F;
+    --ink: #F6F5F1; --graphite: #A8A49B; --luma-text: #FF6A3D; --on-ink: #111111;
+    color-scheme: dark;
   }
 }
 
-/* Bloques --screen: oscuros en cualquier tema, con la luz (--luma) dentro */
-.on-screen {
-  --ground: #0D0F0E; --line: #2B302D;
-  --text: #F5F6F1; --muted: #9AA39D; --luma-text: #C6F04A;
-  --btn-bg: var(--luma); --btn-fg: var(--on-luma);
-  --btn-hover-bg: var(--text); --btn-hover-fg: var(--ground);
-  --accent-shape: var(--luma);
-  --focus: var(--luma);
-  color: var(--text);
+/* Secciones oscuras del tema claro: valores fijos, no se invierten en el tema oscuro */
+.section-ink {
+  --paper: #111111; --surface: #1A1A19; --stone: #2A2927; --line: #34332F;
+  --ink: #F6F5F1; --graphite: #A8A49B; --luma-text: #FF6A3D; --on-ink: #111111;
+  background: #111111;
+  color: #F6F5F1;
   color-scheme: dark;
 }
