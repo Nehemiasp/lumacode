@@ -1,0 +1,55 @@
+---
+// El Patrón: la rejilla del símbolo ampliada. Decorativo (aria-hidden).
+// I = ink, S = stone, L = la luz (círculo luma), · = vacía.
+interface Props {
+  /** Sin el círculo: tres cuadrados y un hueco (404). */
+  noLight?: boolean;
+  /** Entrada animada, una sola vez. */
+  animate?: boolean;
+  /** En móvil muestra solo 2 filas (las del medio). */
+  compact?: boolean;
+  class?: string;
+}
+const { noLight = false, animate = false, compact = false, class: className = '' } = Astro.props;
+
+const rows = ['SII·', '·SIS', 'ISIL', 'S·SI'];
+const cells = rows.flatMap((row, r) => [...row].map((kind, c) => ({ kind, r, c, i: r * 4 + c })));
+const lastIndex = cells.length;
+---
+
+<div class:list={['pattern', { 'pattern--animate': animate, 'pattern--compact': compact }, className]} aria-hidden="true">
+  {cells.map(({ kind, r, i }) => {
+    if (kind === '·') return <span class="pattern__cell pattern__cell--empty" data-row={r} />;
+    if (kind === 'L') return noLight ? <span class="pattern__cell pattern__cell--empty" data-row={r} /> : <span class="pattern__cell pattern__cell--light" data-row={r} style={`--i:${lastIndex}`} />;
+    return <span class:list={['pattern__cell', kind === 'I' ? 'pattern__cell--ink' : 'pattern__cell--stone']} data-row={r} style={`--i:${i}`} />;
+  })}
+</div>
+
+<style>
+  .pattern {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .pattern__cell { aspect-ratio: 1; border-radius: var(--radius-0); }
+  .pattern__cell--ink { background: var(--ink); }
+  .pattern__cell--stone { background: var(--stone); }
+  .pattern__cell--light { background: var(--luma); border-radius: var(--radius-full); }
+
+  @media (max-width: 767px) {
+    .pattern--compact { max-width: 168px; gap: 6px; }
+    .pattern--compact .pattern__cell[data-row='0'],
+    .pattern--compact .pattern__cell[data-row='3'] { display: none; }
+  }
+
+  /* Las celdas aparecen en secuencia y la luz llega al final. Sin bucles. */
+  .pattern--animate .pattern__cell:not(.pattern__cell--empty) {
+    animation: cell-in 300ms ease-out calc(var(--i) * 40ms) backwards;
+  }
+  @keyframes cell-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .pattern--animate .pattern__cell { animation: none; }
+  }
+</style>

@@ -1,9 +1,9 @@
 ---
-import '@fontsource/archivo/latin-400.css';
-import '@fontsource/archivo/latin-500.css';
-import '@fontsource/archivo/latin-600.css';
-import '@fontsource/archivo/latin-700.css';
-import font600 from '@fontsource/archivo/files/archivo-latin-600-normal.woff2?url';
+import '@fontsource/schibsted-grotesk/latin-600.css';
+import '@fontsource/schibsted-grotesk/latin-700.css';
+import '@fontsource/inter-tight/latin-400.css';
+import '@fontsource/inter-tight/latin-500.css';
+import displayFont from '@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-700-normal.woff2?url';
 import '../styles/global.css';
 
 import Header from '../components/Header.astro';
@@ -52,7 +52,8 @@ const jsonLd = organization
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0D0F0E" />
+    <meta name="theme-color" content="#F6F5F1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href={canonical} />
     {languages.map((l) => <link rel="alternate" hreflang={l} href={absoluteUrl(alternates[l], site)} />)}
     <link rel="alternate" hreflang="x-default" href={absoluteUrl(alternates.es, site)} />
@@ -75,7 +76,7 @@ const jsonLd = organization
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
 
-    <link rel="preload" href={font600} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
 
     <!-- Tema: se aplica antes del primer pintado para evitar el parpadeo -->
     <script is:inline>

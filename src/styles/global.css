@@ -85,7 +85,7 @@ h1, h2, h3 { text-wrap: balance; }
 .section { padding-block: calc(var(--section-gap) / 2); }
 .section--line { border-top: 1px solid var(--line); }
 .section--stone { background: var(--stone); padding-block: var(--section-gap); }
-.section-ink { padding-block: var(--section-gap); }
+.band { padding-block: var(--section-gap); }
 .page-head { padding-top: var(--section-gap); padding-bottom: calc(var(--section-gap) / 2); }
 
 /* Botón primario */

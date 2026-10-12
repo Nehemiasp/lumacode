@@ -24,7 +24,7 @@ const contact = route('contact', lang);
 <header class="site-header">
   <div class="container site-header__bar">
     <a class="site-header__logo" href={route('home', lang)} aria-label={t('ui.home')}>
-      <Logo height={30} priority />
+      <Logo height={28} priority />
     </a>
 
     <nav class="site-header__nav" aria-label={t('nav.main')}>
@@ -49,7 +49,7 @@ const contact = route('contact', lang);
   <dialog id="menu" class="menu" aria-label={t('nav.main')}>
     <div class="container menu__bar">
       <a class="site-header__logo" href={route('home', lang)} aria-label={t('ui.home')}>
-        <Logo height={30} />
+        <Logo height={28} />
       </a>
       <button type="button" class="menu-button menu-button--close" aria-label={t('nav.close')}>
         <span class="menu-button__x" aria-hidden="true"></span>
@@ -69,7 +69,7 @@ const contact = route('contact', lang);
 </header>
 
 <style>
-  .site-header { background: var(--ground); border-bottom: 1px solid var(--line); }
+  .site-header { background: var(--paper); border-bottom: 1px solid var(--line); }
   .site-header__bar {
     display: flex;
     align-items: center;
@@ -83,7 +83,7 @@ const contact = route('contact', lang);
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: var(--text);
+    color: var(--ink);
     text-decoration: none;
     transition: color 150ms;
   }
@@ -100,7 +100,7 @@ const contact = route('contact', lang);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     background: transparent;
-    color: var(--text);
+    color: var(--ink);
   }
   .menu-button__bars, .menu-button__bars::before {
     display: block;
@@ -134,8 +134,8 @@ const contact = route('contact', lang);
     margin: 0;
     padding: 0;
     border: 0;
-    background: var(--ground);
-    color: var(--text);
+    background: var(--paper);
+    color: var(--ink);
     overflow-y: auto;
   }
   .menu[open] { display: flex; flex-direction: column; }
@@ -146,7 +146,7 @@ const contact = route('contact', lang);
     display: block;
     padding-block: var(--space-3);
     border-bottom: 1px solid var(--line);
-    color: var(--text);
+    color: var(--ink);
     text-decoration: none;
   }
   .menu__link[aria-current] { color: var(--luma-text); }

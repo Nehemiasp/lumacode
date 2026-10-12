@@ -6,7 +6,7 @@ const { t } = useT(lang);
 ---
 
 <button type="button" class="theme-toggle label" aria-pressed="false" data-to-light={t('theme.light')} data-to-dark={t('theme.dark')}>
-  {t('theme.light')}
+  {t('theme.dark')}
 </button>
 
 <style>
@@ -16,7 +16,7 @@ const { t } = useT(lang);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     background: transparent;
-    color: var(--text);
+    color: var(--ink);
     transition: color 150ms, border-color 150ms;
   }
   .theme-toggle:hover { color: var(--luma-text); border-color: var(--luma-text); }
@@ -25,18 +25,19 @@ const { t } = useT(lang);
 <script>
   const root = document.documentElement;
   const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
-  const isLight = () =>
-    root.dataset.theme ? root.dataset.theme === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
+  const isDark = () =>
+    root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
 
   function sync() {
     if (!button) return;
-    const light = isLight();
-    button.setAttribute('aria-pressed', String(light));
-    button.textContent = light ? button.dataset.toDark! : button.dataset.toLight!;
+    const dark = isDark();
+    button.setAttribute('aria-pressed', String(dark));
+    // El texto nombra el tema al que se cambia
+    button.textContent = dark ? button.dataset.toLight! : button.dataset.toDark!;
   }
 
   button?.addEventListener('click', () => {
-    const next = isLight() ? 'dark' : 'light';
+    const next = isDark() ? 'light' : 'dark';
     root.dataset.theme = next;
     try {
       localStorage.setItem('lumacode-theme', next);

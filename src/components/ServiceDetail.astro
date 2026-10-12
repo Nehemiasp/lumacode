@@ -10,25 +10,24 @@ const { name, description, deliverablesTitle, deliverables, ideal } = Astro.prop
 ---
 
 <article class="detail">
-  <h2 class="heading-2 detail__name">{name}</h2>
-  <div class="detail__body">
-    <p class="body">{description}</p>
-    <div>
-      <h3 class="label">{deliverablesTitle}</h3>
-      <ul class="body detail__list">
-        {deliverables.map((item) => <li>{item}</li>)}
-      </ul>
-    </div>
-    <p class="body muted">{ideal}</p>
+  <h2 class="heading-2">{name}</h2>
+  <p class="body">{description}</p>
+  <div class="detail__side">
+    <h3 class="label graphite">{deliverablesTitle}</h3>
+    <ul class="body detail__list">
+      {deliverables.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="label graphite">{ideal}</p>
   </div>
 </article>
 
 <style>
   .detail { display: grid; gap: var(--space-3); padding-block: var(--space-5); border-top: 1px solid var(--line); }
-  .detail__body { display: grid; gap: var(--space-4); }
-  .detail__list { margin-top: var(--space-2); }
-  .detail__list li { padding-block: var(--space-1); }
+  .detail:last-child { border-bottom: 1px solid var(--line); }
+  .detail__side { display: grid; gap: var(--space-3); align-content: start; }
+  .detail__list { list-style: disc; padding-left: var(--space-4); }
+  .detail__list li { padding-block: 2px; }
   @media (min-width: 768px) {
-    .detail { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .detail { grid-template-columns: 4fr 4fr 4fr; gap: var(--space-4); }
   }
 </style>

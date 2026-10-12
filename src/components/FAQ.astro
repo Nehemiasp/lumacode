@@ -9,7 +9,7 @@ const { items } = Astro.props;
   {items.map((item) => (
     <details class="faq__item">
       <summary class="heading-3 faq__q">{item.q}</summary>
-      <p class="body muted faq__a">{item.a}</p>
+      <p class="body graphite faq__a">{item.a}</p>
     </details>
   ))}
 </div>
@@ -28,7 +28,7 @@ const { items } = Astro.props;
   }
   .faq__q::-webkit-details-marker { display: none; }
   /* Indicador de texto, no ícono */
-  .faq__q::after { content: '+'; content: '+' / ''; flex: none; color: var(--luma-text); }
+  .faq__q::after { content: '+'; content: '+' / ''; flex: none; }
   .faq__item[open] .faq__q::after { content: '\2212'; content: '\2212' / ''; }
   .faq__q:hover { color: var(--luma-text); }
   .faq__a { padding-bottom: var(--space-4); max-width: 64ch; }

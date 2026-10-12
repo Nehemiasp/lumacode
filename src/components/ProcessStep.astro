@@ -8,18 +8,12 @@ interface Props {
 const { title, description, last = false } = Astro.props;
 ---
 
-<li class="step">
-  <span class:list={['step__bar', { 'step__bar--last': last }]} aria-hidden="true"></span>
-  <div>
-    <h3 class="heading-3">{title}</h3>
-    <p class="body muted">{description}</p>
-  </div>
+<li class:list={['step', { 'step--last': last }]}>
+  <h3 class="heading-3">{title}</h3>
+  <p class="body graphite">{description}</p>
 </li>
 
 <style>
-  .step { display: flex; gap: var(--space-3); align-items: flex-start; }
-  .step__bar { flex: none; width: 14px; height: 56px; border-radius: var(--radius-sm); background: var(--line); }
-  /* En tema claro el lima va solo dentro de bloques --screen: aquí se usa --luma-text */
-  .step__bar--last { background: var(--accent-shape); }
-  .step h3 { margin-bottom: var(--space-1); }
+  .step { display: grid; gap: var(--space-2); align-content: start; padding-top: var(--space-3); border-top: 2px solid var(--ink); }
+  .step--last { border-top-color: var(--luma); }
 </style>

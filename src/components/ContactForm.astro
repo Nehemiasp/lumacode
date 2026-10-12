@@ -31,7 +31,7 @@ const messages = {
   data-thanks={thanksPath}
   data-messages={JSON.stringify(messages)}
 >
-  <p class="caption muted">{t('ui.required')}</p>
+  <p class="caption graphite">{t('ui.required')}</p>
 
   <div class="field">
     <label class="label" for="f-nombre">{t('form.name')} <span aria-hidden="true">*</span></label>
@@ -79,7 +79,7 @@ const messages = {
   {config.formAccessKey && <input type="hidden" name="access_key" value={config.formAccessKey} />}
 
   <button class="btn form__submit" type="submit">{t('form.submit')}</button>
-  <p class="caption muted form__note">{note}</p>
+  <p class="caption graphite form__note">{note}</p>
 
   <div class="form__alert" role="alert" id="form-alert"></div>
   <template id="form-alert-template">
@@ -93,7 +93,7 @@ const messages = {
 <style>
   .form { display: grid; gap: var(--space-4); position: relative; }
   .field { display: grid; gap: var(--space-2); border: 0; padding: 0; margin: 0; min-width: 0; }
-  .field > .label { padding: 0; }
+  .field > .label { padding: 0; color: var(--ink); }
   input[type='text'], input[type='email'], textarea {
     width: 100%;
     min-height: 48px;
@@ -101,32 +101,22 @@ const messages = {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--ink);
+    font-family: var(--font-text);
     font-size: 16px;
     line-height: 24px;
     transition: border-color 150ms;
   }
   textarea { resize: vertical; min-height: 160px; }
-  input[type='text']:hover, input[type='email']:hover, textarea:hover { border-color: var(--muted); }
-  /* Foco: borde de 2px en --luma-text (se compensa el padding para que nada salte) */
-  input[type='text']:focus, input[type='email']:focus, textarea:focus {
-    outline: none;
-    border: 2px solid var(--luma-text);
-    padding: calc(var(--space-3) - 1px);
-  }
-  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--text); border-width: 2px; padding: calc(var(--space-3) - 1px); }
+  input[type='text']:hover, input[type='email']:hover, textarea:hover { border-color: var(--graphite); }
+  /* Foco: contorno de 2px en ink, separado 2px */
+  input[type='text']:focus-visible, input[type='email']:focus-visible, textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  /* Error: texto con ícono y borde del campo en luma-text, nunca solo color */
+  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--luma-text); }
 
   .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .chip { position: relative; display: inline-flex; }
-  .chip input {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
+  .chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
   .chip__text {
     display: inline-flex;
     align-items: center;
@@ -135,15 +125,16 @@ const messages = {
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     background: var(--surface);
-    color: var(--text);
+    color: var(--ink);
     transition: background-color 150ms, color 150ms, border-color 150ms;
   }
-  .chip:hover .chip__text { border-color: var(--muted); }
-  .chip input:checked + .chip__text { background: var(--text); color: var(--ground); border-color: var(--text); }
+  .chip:hover .chip__text { border-color: var(--graphite); }
+  .chip input:checked + .chip__text { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
   .chip input:checked + .chip__text::before { content: '\2713'; margin-right: var(--space-2); }
-  .chip input:focus-visible + .chip__text { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .chip input:focus-visible + .chip__text { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .field[aria-invalid='true'] .chip__text { border-color: var(--luma-text); }
 
-  .field__error { display: flex; align-items: flex-start; gap: var(--space-2); color: var(--text); font-size: 14px; line-height: 20px; font-weight: 500; }
+  .field__error { display: flex; align-items: flex-start; gap: var(--space-2); color: var(--ink); font-size: 14px; line-height: 20px; font-weight: 500; }
   .field__error[hidden] { display: none; }
   :global(.field__icon) { flex: none; margin-top: 2px; }
 
@@ -152,10 +143,7 @@ const messages = {
   .form__submit { width: 100%; }
   .form__note { margin-top: calc(var(--space-2) * -1); }
   .form__alert:empty { display: none; }
-  .form__alert { padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
-  @media (min-width: 768px) {
-    .form__submit { width: auto; justify-self: start; }
-  }
+  .form__alert { padding: var(--space-3); border: 1px solid var(--luma-text); border-radius: var(--radius-sm); background: var(--paper); }
 </style>
 
 <script>

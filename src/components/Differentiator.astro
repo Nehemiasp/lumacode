@@ -1,4 +1,5 @@
 ---
+import Indicator from './Indicator.astro';
 import { useT, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -6,16 +7,17 @@ const { t } = useT(lang);
 const items = [1, 2, 3] as const;
 ---
 
-<section class="section section--line" id="diferencial" aria-labelledby="diferencial-titulo">
+<section class="section" id="diferencial" aria-labelledby="diferencial-titulo">
   <div class="container">
     <h2 class="display-l diff__title" id="diferencial-titulo">
       {t('diff.title.1')} <span class="accent">{t('diff.title.2')}</span>
     </h2>
     <div class="diff__cols">
       {items.map((n) => (
-        <div>
+        <div class="diff__item">
+          <Indicator light={n === 3} />
           <h3 class="heading-3">{t(`diff.${n}.title`)}</h3>
-          <p class="body muted">{t(`diff.${n}.text`)}</p>
+          <p class="body graphite">{t(`diff.${n}.text`)}</p>
         </div>
       ))}
     </div>
@@ -24,8 +26,9 @@ const items = [1, 2, 3] as const;
 
 <style>
   .diff__title { max-width: 16ch; }
-  .diff__cols { display: grid; gap: var(--space-4); margin-top: var(--space-6); }
-  .diff__cols h3 { margin-bottom: var(--space-2); }
+  .diff__cols { display: grid; gap: var(--space-5); margin-top: var(--space-6); }
+  .diff__item { display: grid; gap: var(--space-2); align-content: start; }
+  .diff__item :global(.indicator) { margin-bottom: var(--space-2); }
   @media (min-width: 768px) {
     .diff__cols { grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
   }

@@ -1,0 +1,13 @@
+---
+// Cuadrado ink o círculo luma. En listas, los primeros son cuadrados y el último es el círculo.
+interface Props { light?: boolean }
+const { light = false } = Astro.props;
+---
+
+<span class:list={['indicator', { 'indicator--light': light }]} aria-hidden="true"></span>
+
+<style>
+  .indicator { display: block; width: 20px; height: 20px; background: var(--ink); border-radius: var(--radius-0); }
+  .indicator--light { background: var(--luma); border-radius: var(--radius-full); }
+  @media (min-width: 768px) { .indicator { width: 28px; height: 28px; } }
+</style>
